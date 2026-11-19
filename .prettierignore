@@ -1,0 +1,12 @@
+# Written by the package manager.
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+bun.lock
+
+# Written the way VS Code writes them, one entry per line.
+.vscode/extensions.json
+
+# The RealWorld submodule, and the API types generated from its spec.
+realworld/
+src/api/schema.d.ts
