@@ -6,7 +6,7 @@ import { Layout } from "../components/Layout.js";
 import type { SignedOutEnv } from "../session.js";
 
 // What the form was sent with, to fill it again when the API refuses it. Never
-// the password.
+// the password. Empty when missing: Solid would write undefined into a field.
 export interface AuthForm {
   context: Context<SignedOutEnv>;
   username?: string;
@@ -15,7 +15,7 @@ export interface AuthForm {
 }
 
 // The sign-in page, at /login.
-export function Login({ context, email, errors }: AuthForm) {
+export function Login({ context, email = "", errors }: AuthForm) {
   return (
     <Layout user={context.get("user")} path="/login">
       {cs`(
@@ -63,7 +63,12 @@ export function Login({ context, email, errors }: AuthForm) {
 }
 
 // The sign-up page, at /register.
-export function Register({ context, username, email, errors }: AuthForm) {
+export function Register({
+  context,
+  username = "",
+  email = "",
+  errors,
+}: AuthForm) {
   return (
     <Layout user={context.get("user")} path="/register">
       {cs`(

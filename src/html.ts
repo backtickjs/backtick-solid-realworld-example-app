@@ -31,7 +31,7 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conduit</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700|Lora:400,700">
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png">
