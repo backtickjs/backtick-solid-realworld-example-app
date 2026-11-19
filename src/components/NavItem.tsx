@@ -1,30 +1,22 @@
-import { cs, type Client } from "@backtickjs/core";
-import type { JSX } from "@backtickjs/jsx-solid/jsx-runtime";
-
-// Between an icon and its label, as the templates write it: &nbsp;
-const NBSP = "\u00a0";
+import { cs } from "@backtickjs/core";
+import type { JSX } from "solid-js";
 
 // One link of a nav bar or a row of tabs, marked when it's the page's. `icon`
 // is an Ionicons class drawn before the label: "ion-compose".
-export function NavItem({
-  href,
-  active,
-  icon,
-  children,
-}: {
+export const NavItem = cs`(props: {
   href: string;
   active: boolean;
   icon?: string;
-  children: string | JSX.Element | Client<JSX.Element>;
-}) {
-  const iconElement = icon === undefined ? null : cs`<i class={$icon}></i>`;
-  return cs`(
-    <li class="nav-item">
-      <a class={${active ? "nav-link active" : "nav-link"}} href={$href}>
-        {$iconElement}
-        {${icon === undefined ? "" : NBSP}}
-        {$children}
-      </a>
-    </li>
-  )`;
-}
+  children: JSX.Element;
+}) => (
+  <li class="nav-item">
+    <a class={props.active ? "nav-link active" : "nav-link"} href={props.href}>
+      {props.icon === undefined ? null : (
+        <>
+          <i class={props.icon}></i>&nbsp;
+        </>
+      )}
+      {props.children}
+    </a>
+  </li>
+)`;

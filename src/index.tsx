@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { compress } from "hono/compress";
 import { contextStorage } from "hono/context-storage";
 import { HTTPException } from "hono/http-exception";
@@ -243,13 +243,19 @@ app.post("/article/:slug/favorite", signedIn, async (context) => {
   await client.POST("/articles/{slug}/favorite", {
     params: { path: { slug: context.req.param("slug") } },
   });
-  return context.redirect(backOf(await context.req.parseBody()), 303);
+  return context.redirect(
+    refererOf(context, `/article/${context.req.param("slug")}`),
+    303,
+  );
 });
 app.post("/article/:slug/unfavorite", signedIn, async (context) => {
   await client.DELETE("/articles/{slug}/favorite", {
     params: { path: { slug: context.req.param("slug") } },
   });
-  return context.redirect(backOf(await context.req.parseBody()), 303);
+  return context.redirect(
+    refererOf(context, `/article/${context.req.param("slug")}`),
+    303,
+  );
 });
 
 app.post("/article/:slug/comments", signedIn, async (context) => {
@@ -273,13 +279,19 @@ app.post("/profile/:username/follow", signedIn, async (context) => {
   await client.POST("/profiles/{username}/follow", {
     params: { path: { username: context.req.param("username") } },
   });
-  return context.redirect(backOf(await context.req.parseBody()), 303);
+  return context.redirect(
+    refererOf(context, `/profile/${context.req.param("username")}`),
+    303,
+  );
 });
 app.post("/profile/:username/unfollow", signedIn, async (context) => {
   await client.DELETE("/profiles/{username}/follow", {
     params: { path: { username: context.req.param("username") } },
   });
-  return context.redirect(backOf(await context.req.parseBody()), 303);
+  return context.redirect(
+    refererOf(context, `/profile/${context.req.param("username")}`),
+    303,
+  );
 });
 
 app.notFound(async (context) =>
@@ -322,9 +334,18 @@ function draftOf(form: Record<string, unknown>): Draft {
   };
 }
 
-// Where a form asked to return, if it's a page of this site.
-function backOf(form: Record<string, unknown>) {
-  return pathOf(text(form.back));
+// The page a form was sent from, as the browser's Referer says, if it's a page
+// of this site, or `fallback`: a form can't send the browser elsewhere.
+function refererOf(context: Context, fallback: string) {
+  const referer = context.req.header("referer");
+  if (referer === undefined || !URL.canParse(referer)) {
+    return fallback;
+  }
+  const url = new URL(referer);
+  if (url.origin !== new URL(context.req.url).origin) {
+    return fallback;
+  }
+  return url.pathname + url.search;
 }
 
 // `path`, if it's a page of this site, or the home page: a link can't send

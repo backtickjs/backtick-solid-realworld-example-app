@@ -48,7 +48,6 @@ export async function Editor({
     draft = data.article;
   }
   draft ??= EMPTY;
-  const errorMessages = <ErrorMessages errors={errors} />;
   return (
     <Layout
       user={user}
@@ -59,7 +58,7 @@ export async function Editor({
           <div class="container page">
             <div class="row">
               <div class="col-md-10 offset-md-1 col-xs-12">
-                {$errorMessages}
+                <$ErrorMessages errors={$errors} />
                 <form method="post">
                   <fieldset>
                     <fieldset class="form-group">

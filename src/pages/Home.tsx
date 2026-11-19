@@ -45,58 +45,35 @@ export async function Home({
   }
   const { articles, articlesCount } = articlesResponse.data;
   const tags = tagsResponse.data?.tags ?? [];
-  const tabs = (
-    <>
-      {user ? (
-        <NavItem
-          href={hrefOf({ kind: "following" })}
-          active={feed.kind === "following"}
+  // Your Feed is a signed-in user's; a tag's tab is shown on its page.
+  const yourFeed = user
+    ? cs`(
+        <$NavItem
+          href={${feedHref({ kind: "following" })}}
+          active={${feed.kind === "following"}}
         >
           Your Feed
-        </NavItem>
-      ) : null}
-      <NavItem
-        href={hrefOf({ kind: "global" })}
-        active={feed.kind === "global"}
-      >
-        Global Feed
-      </NavItem>
-      {feed.kind === "tag" ? (
-        <NavItem href={hrefOf(feed)} active>
-          {`# ${feed.tag}`}
-        </NavItem>
-      ) : null}
-    </>
-  );
-  const popular = tags.map(
-    (tag) => cs`(
-      <a
-        href={${`/tag/${encodeURIComponent(tag)}`}}
-        class="tag-pill tag-default"
-      >
-        {$tag}
-      </a>
-    )`,
-  );
-  const list = (
-    <ArticleList
-      articles={articles}
-      articlesCount={articlesCount}
-      page={page}
-      hrefOf={(n) => hrefOf(feed, n)}
-      back={hrefOf(feed, page)}
-      empty={
-        feed.kind === "following"
-          ? cs`(
-              <>
-                Your feed is empty. Follow some authors, or read the{" "}
-                <a href="/">Global Feed</a>.
-              </>
-            )`
-          : undefined
-      }
-    />
-  );
+        </$NavItem>
+      )`
+    : null;
+  const tagFeed =
+    feed.kind === "tag"
+      ? cs`(
+          <$NavItem href={${feedHref(feed)}} active={true}>
+            # {${feed.tag}}
+          </$NavItem>
+        )`
+      : null;
+  // What an empty list says: Your Feed points to the Global Feed.
+  const empty =
+    feed.kind === "following"
+      ? cs`(
+          <>
+            Your feed is empty. Follow some authors, or read the{" "}
+            <a href="/">Global Feed</a>.
+          </>
+        )`
+      : undefined;
 
   return (
     <Layout user={user} path="/">
@@ -112,14 +89,44 @@ export async function Home({
             <div class="row">
               <div class="col-md-9">
                 <div class="feed-toggle">
-                  <ul class="nav nav-pills outline-active">{$tabs}</ul>
+                  <ul class="nav nav-pills outline-active">
+                    {$yourFeed}
+                    <$NavItem
+                      href={${feedHref({ kind: "global" })}}
+                      active={${feed.kind === "global"}}
+                    >
+                      Global Feed
+                    </$NavItem>
+                    {$tagFeed}
+                  </ul>
                 </div>
-                {$list}
+                {
+                  ${(
+                    <ArticleList
+                      articles={articles}
+                      articlesCount={articlesCount}
+                      page={page}
+                      url={context.req.url}
+                      empty={empty}
+                    />
+                  )}
+                }
               </div>
               <div class="col-md-3">
                 <div class="sidebar">
                   <p>Popular Tags</p>
-                  <div class="tag-list">{$popular}</div>
+                  <div class="tag-list">{
+                    ${tags.map(
+                      (tag) => cs`(
+                        <a
+                          href={${`/tag/${encodeURIComponent(tag)}`}}
+                          class="tag-pill tag-default"
+                        >
+                          {$tag}
+                        </a>
+                      )`,
+                    )}
+                  }</div>
                 </div>
               </div>
             </div>
@@ -130,16 +137,13 @@ export async function Home({
   );
 }
 
-// A feed's address, at page `page`: "/", "/?feed=following&page=2", "/tag/dragons".
-function hrefOf(feed: Feed, page = 1) {
+// A feed's address: "/", "/?feed=following", "/tag/dragons".
+function feedHref(feed: Feed) {
   const path =
     feed.kind === "tag" ? `/tag/${encodeURIComponent(feed.tag)}` : "/";
   const query = new URLSearchParams();
   if (feed.kind === "following") {
     query.set("feed", "following");
-  }
-  if (page > 1) {
-    query.set("page", String(page));
   }
   return query.size === 0 ? path : `${path}?${query}`;
 }

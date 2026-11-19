@@ -16,42 +16,42 @@ export function Layout({
   path: string;
   children: JSX.Element | Client<JSX.Element>;
 }) {
-  const links = user ? (
-    <>
-      <NavItem href="/" active={path === "/"}>
-        Home
-      </NavItem>
-      <NavItem href="/editor" active={path === "/editor"} icon="ion-compose">
-        New Article
-      </NavItem>
-      <NavItem href="/settings" active={path === "/settings"} icon="ion-gear-a">
-        Settings
-      </NavItem>
-      <NavItem
-        href={`/profile/${user.username}`}
-        active={path === `/profile/${user.username}`}
-      >
-        {cs`(
-          <>
+  const links = user
+    ? cs`(
+        <>
+          <$NavItem
+            href="/editor"
+            active={${path === "/editor"}}
+            icon="ion-compose"
+          >
+            New Article
+          </$NavItem>
+          <$NavItem
+            href="/settings"
+            active={${path === "/settings"}}
+            icon="ion-gear-a"
+          >
+            Settings
+          </$NavItem>
+          <$NavItem
+            href={${`/profile/${user.username}`}}
+            active={${path === `/profile/${user.username}`}}
+          >
             <img src={${avatarOf(user.image)}} class="user-pic" />
             {${user.username}}
-          </>
-        )`}
-      </NavItem>
-    </>
-  ) : (
-    <>
-      <NavItem href="/" active={path === "/"}>
-        Home
-      </NavItem>
-      <NavItem href="/login" active={path === "/login"}>
-        Sign in
-      </NavItem>
-      <NavItem href="/register" active={path === "/register"}>
-        Sign up
-      </NavItem>
-    </>
-  );
+          </$NavItem>
+        </>
+      )`
+    : cs`(
+        <>
+          <$NavItem href="/login" active={${path === "/login"}}>
+            Sign in
+          </$NavItem>
+          <$NavItem href="/register" active={${path === "/register"}}>
+            Sign up
+          </$NavItem>
+        </>
+      )`;
 
   return cs`(
     <>
@@ -60,7 +60,12 @@ export function Layout({
           <a class="navbar-brand" href="/">
             conduit
           </a>
-          <ul class="nav navbar-nav pull-xs-right">{$links}</ul>
+          <ul class="nav navbar-nav pull-xs-right">
+            <$NavItem href="/" active={${path === "/"}}>
+              Home
+            </$NavItem>
+            {$links}
+          </ul>
         </div>
       </nav>
       {$children}

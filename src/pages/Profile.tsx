@@ -46,8 +46,6 @@ export async function Profile({
   const { articles, articlesCount } = articlesResponse.data;
   const home = `/profile/${encodeURIComponent(username)}`;
   const { image, bio } = profile;
-  const tabHref = tab === "articles" ? home : `${home}/favorites`;
-  const hrefOf = (n: number) => (n === 1 ? tabHref : `${tabHref}?page=${n}`);
 
   const action =
     user?.username === username ? (
@@ -58,28 +56,8 @@ export async function Profile({
         </a>
       )`
     ) : (
-      <FollowButton profile={profile} back={tabHref} />
+      <FollowButton profile={profile} />
     );
-  const tabs = (
-    <>
-      <NavItem href={home} active={tab === "articles"}>
-        My Articles
-      </NavItem>
-      <NavItem href={`${home}/favorites`} active={tab === "favorites"}>
-        Favorited Articles
-      </NavItem>
-    </>
-  );
-  const list = (
-    <ArticleList
-      articles={articles}
-      articlesCount={articlesCount}
-      page={page}
-      hrefOf={hrefOf}
-      back={hrefOf(page)}
-    />
-  );
-
   return (
     <Layout user={user} path={home}>
       {cs`(
@@ -100,9 +78,28 @@ export async function Profile({
             <div class="row">
               <div class="col-xs-12 col-md-10 offset-md-1">
                 <div class="articles-toggle">
-                  <ul class="nav nav-pills outline-active">{$tabs}</ul>
+                  <ul class="nav nav-pills outline-active">
+                    <$NavItem href={$home} active={${tab === "articles"}}>
+                      My Articles
+                    </$NavItem>
+                    <$NavItem
+                      href={${`${home}/favorites`}}
+                      active={${tab === "favorites"}}
+                    >
+                      Favorited Articles
+                    </$NavItem>
+                  </ul>
                 </div>
-                {$list}
+                {
+                  ${(
+                    <ArticleList
+                      articles={articles}
+                      articlesCount={articlesCount}
+                      page={page}
+                      url={context.req.url}
+                    />
+                  )}
+                }
               </div>
             </div>
           </div>

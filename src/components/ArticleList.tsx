@@ -1,55 +1,59 @@
 import { cs, type Client } from "@backtickjs/core";
 import type { JSX } from "@backtickjs/jsx-solid/jsx-runtime";
+import { For, Show } from "solid-js" with { backtick: "client" };
 import type { ArticleSummary } from "../api/types.js";
 import { avatarOf, formatDate } from "../format.js";
 
 export const PAGE_SIZE = 10;
 
-// A page of article previews, and links to the other pages. `hrefOf` gives
-// the link to page `n`, counted from 1; `back` is this page's, where
-// favoriting returns. `empty` is what an empty list says instead.
+// A page of article previews, and links to the other pages. `url` is this
+// page's; the other pages are it with another `?page=`. `empty` is what an
+// empty list says instead.
 export function ArticleList({
   articles,
   articlesCount,
   page,
-  hrefOf,
-  back,
+  url,
   empty = "No articles are here... yet.",
 }: {
   articles: ArticleSummary[];
   articlesCount: number;
   page: number;
-  hrefOf: (n: number) => string;
-  back: string;
+  url: string;
   empty?: string | Client<JSX.Element>;
 }) {
   if (articles.length === 0) {
     return cs`<div class="article-preview empty-feed-message">{$empty}</div>`;
   }
 
+  const hrefs = Array.from(
+    { length: Math.ceil(articlesCount / PAGE_SIZE) },
+    (_, i) => pageHref(url, i + 1),
+  );
   return (
     <>
       {articles.map((article) => (
-        <ArticlePreview article={article} back={back} />
+        <ArticlePreview article={article} />
       ))}
-      <Pagination
-        pageCount={Math.ceil(articlesCount / PAGE_SIZE)}
-        page={page}
-        hrefOf={hrefOf}
-      />
+      {cs`<$Pagination hrefs={$hrefs} page={$page} />`}
     </>
   );
 }
 
-function ArticlePreview({
-  article,
-  back,
-}: {
-  article: ArticleSummary;
-  back: string;
-}) {
+// `url`'s path and query at page `page`: "/tag/dragons?page=2". Page 1 has
+// no `?page=`.
+function pageHref(url: string, page: number) {
+  const href = new URL(url);
+  if (page === 1) {
+    href.searchParams.delete("page");
+  } else {
+    href.searchParams.set("page", String(page));
+  }
+  return href.pathname + href.search;
+}
+
+function ArticlePreview({ article }: { article: ArticleSummary }) {
   const profile = `/profile/${article.author.username}`;
-  const tags = <TagList tags={article.tagList} />;
   return cs`(
     <div class="article-preview">
       <div class="article-meta">
@@ -69,7 +73,6 @@ function ArticlePreview({
           }
           class="pull-xs-right"
         >
-          <input type="hidden" name="back" value={$back} />
           <button
             type="submit"
             class={
@@ -86,42 +89,35 @@ function ArticlePreview({
         <h1>{${article.title}}</h1>
         <p>{${article.description}}</p>
         <span>Read more...</span>
-        {$tags}
+        <$TagList tags={${article.tagList}} />
       </a>
     </div>
   )`;
 }
 
 // An article's tags, as previews and the article page show them.
-export function TagList({ tags }: { tags: string[] }) {
-  const items = tags.map(
-    (tag) => cs`<li class="tag-default tag-pill tag-outline">{$tag}</li>`,
-  );
-  return cs`<ul class="tag-list">{$items}</ul>`;
-}
+export const TagList = cs`(props: { tags: string[] }) => (
+  <ul class="tag-list">
+    <$For each={props.tags}>
+      {(tag) => <li class="tag-default tag-pill tag-outline">{tag}</li>}
+    </$For>
+  </ul>
+)`;
 
-// Links to every page, when there's more than one.
-function Pagination({
-  pageCount,
-  page,
-  hrefOf,
-}: {
-  pageCount: number;
-  page: number;
-  hrefOf: (n: number) => string;
-}) {
-  if (pageCount <= 1) {
-    return null;
-  }
-  const links = Array.from({ length: pageCount }, (_, i) => {
-    const n = i + 1;
-    return cs`(
-      <li class={${n === page ? "page-item active" : "page-item"}}>
-        <a class="page-link" href={${hrefOf(n)}}>
-          {$n}
-        </a>
-      </li>
-    )`;
-  });
-  return cs`<ul class="pagination">{$links}</ul>`;
-}
+// Links to every page, when there's more than one: `hrefs` holds each page's,
+// in order, and `page` is this one, counted from 1.
+const Pagination = cs`(props: { hrefs: string[]; page: number }) => (
+  <$Show when={props.hrefs.length > 1}>
+    <ul class="pagination">
+      <$For each={props.hrefs}>
+        {(href, i) => (
+          <li class={i() + 1 === props.page ? "page-item active" : "page-item"}>
+            <a class="page-link" href={href}>
+              {i() + 1}
+            </a>
+          </li>
+        )}
+      </$For>
+    </ul>
+  </$Show>
+)`;

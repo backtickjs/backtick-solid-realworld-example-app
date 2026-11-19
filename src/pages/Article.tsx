@@ -29,9 +29,7 @@ export async function Article({
   }
   const { article } = articleResponse.data;
   const comments = commentsResponse.data?.comments ?? [];
-  const meta = <ArticleMeta article={article} user={user} />;
   const body = renderMarkdown(article.body);
-  const tags = <TagList tags={article.tagList} />;
   // Signing in from here comes back here.
   const next = `?next=${encodeURIComponent(`/article/${article.slug}`)}`;
   const commentForm = user ? (
@@ -45,9 +43,6 @@ export async function Article({
       </p>
     )`
   );
-  const cards = comments.map((comment) => (
-    <CommentCard slug={article.slug} comment={comment} user={user} />
-  ));
 
   return (
     <Layout user={user} path={`/article/${article.slug}`}>
@@ -56,22 +51,32 @@ export async function Article({
           <div class="banner">
             <div class="container">
               <h1>{${article.title}}</h1>
-              {$meta}
+              {${(<ArticleMeta article={article} user={user} />)}}
             </div>
           </div>
           <div class="container page">
             <div class="row article-content">
               <div class="col-md-12">
                 <div innerHTML={$body} />
-                {$tags}
+                <$TagList tags={${article.tagList}} />
               </div>
             </div>
             <hr />
-            <div class="article-actions">{$meta}</div>
+            <div class="article-actions">
+              {${(<ArticleMeta article={article} user={user} />)}}
+            </div>
             <div class="row">
               <div class="col-xs-12 col-md-8 offset-md-2">
                 {$commentForm}
-                {$cards}
+                {
+                  ${comments.map((comment) => (
+                    <CommentCard
+                      slug={article.slug}
+                      comment={comment}
+                      user={user}
+                    />
+                  ))}
+                }
               </div>
             </div>
           </div>

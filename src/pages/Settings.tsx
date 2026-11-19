@@ -18,7 +18,6 @@ export function Settings({
 }) {
   const user = context.get("user");
   const form = { ...user, ...values };
-  const errorMessages = <ErrorMessages errors={errors} />;
   return (
     <Layout user={user} path="/settings">
       {cs`(
@@ -27,7 +26,7 @@ export function Settings({
             <div class="row">
               <div class="col-md-6 offset-md-3 col-xs-12">
                 <h1 class="text-xs-center">Your Settings</h1>
-                {$errorMessages}
+                <$ErrorMessages errors={$errors} />
                 <form method="post">
                   <fieldset>
                     <fieldset class="form-group">

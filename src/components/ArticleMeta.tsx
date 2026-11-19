@@ -13,7 +13,6 @@ export function ArticleMeta({
 }) {
   const { author, slug } = article;
   const profile = `/profile/${author.username}`;
-  const back = `/article/${slug}`;
 
   const actions =
     user?.username === author.username ? (
@@ -39,9 +38,9 @@ export function ArticleMeta({
       )`
     ) : (
       <>
-        <FollowButton profile={author} back={back} />
+        <FollowButton profile={author} />
         &nbsp;&nbsp;
-        <FavoriteButton article={article} back={back} />
+        <FavoriteButton article={article} />
       </>
     );
 
@@ -61,19 +60,12 @@ export function ArticleMeta({
   )`;
 }
 
-// Follows or unfollows `profile`, then returns to `back`.
-export function FollowButton({
-  profile,
-  back,
-}: {
-  profile: Profile;
-  back: string;
-}) {
+// Follows or unfollows `profile`, then returns to the page.
+export function FollowButton({ profile }: { profile: Profile }) {
   const action = `/profile/${profile.username}/${profile.following ? "unfollow" : "follow"}`;
   const label = `${profile.following ? "Unfollow" : "Follow"} ${profile.username}`;
   return cs`(
     <form method="post" action={$action} style={{ display: "inline" }}>
-      <input type="hidden" name="back" value={$back} />
       <button type="submit" class="btn btn-sm btn-outline-secondary action-btn">
         <i class="ion-plus-round"></i>
         &nbsp; {$label}
@@ -82,12 +74,11 @@ export function FollowButton({
   )`;
 }
 
-// Favorites or unfavorites `article`, then returns to `back`.
-function FavoriteButton({ article, back }: { article: Article; back: string }) {
+// Favorites or unfavorites `article`, then returns to the page.
+function FavoriteButton({ article }: { article: Article }) {
   const action = `/article/${article.slug}/${article.favorited ? "unfavorite" : "favorite"}`;
   return cs`(
     <form method="post" action={$action} style={{ display: "inline" }}>
-      <input type="hidden" name="back" value={$back} />
       <button
         type="submit"
         class={

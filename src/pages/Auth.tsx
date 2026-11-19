@@ -16,7 +16,6 @@ export interface AuthForm {
 
 // The sign-in page, at /login.
 export function Login({ context, email, errors }: AuthForm) {
-  const errorMessages = <ErrorMessages errors={errors} />;
   return (
     <Layout user={context.get("user")} path="/login">
       {cs`(
@@ -28,7 +27,7 @@ export function Login({ context, email, errors }: AuthForm) {
                 <p class="text-xs-center">
                   <a href="/register">Need an account?</a>
                 </p>
-                {$errorMessages}
+                <$ErrorMessages errors={$errors} />
                 <form method="post">
                   <fieldset class="form-group">
                     <input
@@ -65,7 +64,6 @@ export function Login({ context, email, errors }: AuthForm) {
 
 // The sign-up page, at /register.
 export function Register({ context, username, email, errors }: AuthForm) {
-  const errorMessages = <ErrorMessages errors={errors} />;
   return (
     <Layout user={context.get("user")} path="/register">
       {cs`(
@@ -77,7 +75,7 @@ export function Register({ context, username, email, errors }: AuthForm) {
                 <p class="text-xs-center">
                   <a href="/login">Have an account?</a>
                 </p>
-                {$errorMessages}
+                <$ErrorMessages errors={$errors} />
                 <form method="post">
                   <fieldset class="form-group">
                     <input
