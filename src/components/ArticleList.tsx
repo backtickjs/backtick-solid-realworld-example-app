@@ -1,5 +1,5 @@
 import { cs, type Client } from "@backtickjs/core";
-import type { JSX } from "@backtickjs/jsx-react/jsx-runtime";
+import type { JSX } from "@backtickjs/jsx-solid/jsx-runtime";
 import type { ArticleSummary } from "../api/types.js";
 import { avatarOf, formatDate } from "../format.js";
 
@@ -24,9 +24,7 @@ export function ArticleList({
   empty?: string | Client<JSX.Element>;
 }) {
   if (articles.length === 0) {
-    return cs`(
-      <div className="article-preview empty-feed-message">{$empty}</div>
-    )`;
+    return cs`<div class="article-preview empty-feed-message">{$empty}</div>`;
   }
 
   return (
@@ -53,38 +51,38 @@ function ArticlePreview({
   const profile = `/profile/${article.author.username}`;
   const tags = <TagList tags={article.tagList} />;
   return cs`(
-    <div key={${article.slug}} className="article-preview">
-      <div className="article-meta">
+    <div class="article-preview">
+      <div class="article-meta">
         <a href={$profile}>
           <img src={${avatarOf(article.author.image)}} />
         </a>
-        <div className="info">
-          <a href={$profile} className="author">
+        <div class="info">
+          <a href={$profile} class="author">
             {${article.author.username}}
           </a>
-          <span className="date">{${formatDate(article.createdAt)}}</span>
+          <span class="date">{${formatDate(article.createdAt)}}</span>
         </div>
         <form
           method="post"
           action={
             ${`/article/${article.slug}/${article.favorited ? "unfavorite" : "favorite"}`}
           }
-          className="pull-xs-right"
+          class="pull-xs-right"
         >
           <input type="hidden" name="back" value={$back} />
           <button
             type="submit"
-            className={
+            class={
               ${article.favorited
                 ? "btn btn-sm btn-primary"
                 : "btn btn-sm btn-outline-primary"}
             }
           >
-            <i className="ion-heart"></i> {${article.favoritesCount}}
+            <i class="ion-heart"></i> {${article.favoritesCount}}
           </button>
         </form>
       </div>
-      <a href={${`/article/${article.slug}`}} className="preview-link">
+      <a href={${`/article/${article.slug}`}} class="preview-link">
         <h1>{${article.title}}</h1>
         <p>{${article.description}}</p>
         <span>Read more...</span>
@@ -97,13 +95,9 @@ function ArticlePreview({
 // An article's tags, as previews and the article page show them.
 export function TagList({ tags }: { tags: string[] }) {
   const items = tags.map(
-    (tag) => cs`(
-      <li key={$tag} className="tag-default tag-pill tag-outline">
-        {$tag}
-      </li>
-    )`,
+    (tag) => cs`<li class="tag-default tag-pill tag-outline">{$tag}</li>`,
   );
-  return cs`<ul className="tag-list">{$items}</ul>`;
+  return cs`<ul class="tag-list">{$items}</ul>`;
 }
 
 // Links to every page, when there's more than one.
@@ -122,12 +116,12 @@ function Pagination({
   const links = Array.from({ length: pageCount }, (_, i) => {
     const n = i + 1;
     return cs`(
-      <li key={$n} className={${n === page ? "page-item active" : "page-item"}}>
-        <a className="page-link" href={${hrefOf(n)}}>
+      <li class={${n === page ? "page-item active" : "page-item"}}>
+        <a class="page-link" href={${hrefOf(n)}}>
           {$n}
         </a>
       </li>
     )`;
   });
-  return cs`<ul className="pagination">{$links}</ul>`;
+  return cs`<ul class="pagination">{$links}</ul>`;
 }

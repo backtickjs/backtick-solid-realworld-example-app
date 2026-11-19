@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
+import { compress } from "hono/compress";
 import { contextStorage } from "hono/context-storage";
 import { HTTPException } from "hono/http-exception";
 import { client } from "./api/client.js";
@@ -22,6 +23,9 @@ import {
 } from "./session.js";
 
 const app = new Hono<AppEnv>();
+
+// Every answer compressed: gzip or deflate, as the browser accepts.
+app.use(compress());
 
 // The request, for what any component asks of it, and the signed-in user,
 // from the session cookie: `context.get("user")`.

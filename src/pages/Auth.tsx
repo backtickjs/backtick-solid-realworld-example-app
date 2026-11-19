@@ -20,28 +20,28 @@ export function Login({ context, email, errors }: AuthForm) {
   return (
     <Layout user={context.get("user")} path="/login">
       {cs`(
-        <div className="auth-page">
-          <div className="container page">
-            <div className="row">
-              <div className="col-md-6 offset-md-3 col-xs-12">
-                <h1 className="text-xs-center">Sign in</h1>
-                <p className="text-xs-center">
+        <div class="auth-page">
+          <div class="container page">
+            <div class="row">
+              <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">Sign in</h1>
+                <p class="text-xs-center">
                   <a href="/register">Need an account?</a>
                 </p>
                 {$errorMessages}
                 <form method="post">
-                  <fieldset className="form-group">
+                  <fieldset class="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      class="form-control form-control-lg"
                       type="email"
                       name="email"
                       placeholder="Email"
-                      defaultValue={$email}
+                      value={$email}
                     />
                   </fieldset>
-                  <fieldset className="form-group">
+                  <fieldset class="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      class="form-control form-control-lg"
                       type="password"
                       name="password"
                       placeholder="Password"
@@ -49,7 +49,7 @@ export function Login({ context, email, errors }: AuthForm) {
                   </fieldset>
                   <button
                     type="submit"
-                    className="btn btn-lg btn-primary pull-xs-right"
+                    class="btn btn-lg btn-primary pull-xs-right"
                   >
                     Sign in
                   </button>
@@ -69,37 +69,37 @@ export function Register({ context, username, email, errors }: AuthForm) {
   return (
     <Layout user={context.get("user")} path="/register">
       {cs`(
-        <div className="auth-page">
-          <div className="container page">
-            <div className="row">
-              <div className="col-md-6 offset-md-3 col-xs-12">
-                <h1 className="text-xs-center">Sign up</h1>
-                <p className="text-xs-center">
+        <div class="auth-page">
+          <div class="container page">
+            <div class="row">
+              <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">Sign up</h1>
+                <p class="text-xs-center">
                   <a href="/login">Have an account?</a>
                 </p>
                 {$errorMessages}
                 <form method="post">
-                  <fieldset className="form-group">
+                  <fieldset class="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      class="form-control form-control-lg"
                       type="text"
                       name="username"
                       placeholder="Username"
-                      defaultValue={$username}
+                      value={$username}
                     />
                   </fieldset>
-                  <fieldset className="form-group">
+                  <fieldset class="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      class="form-control form-control-lg"
                       type="email"
                       name="email"
                       placeholder="Email"
-                      defaultValue={$email}
+                      value={$email}
                     />
                   </fieldset>
-                  <fieldset className="form-group">
+                  <fieldset class="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      class="form-control form-control-lg"
                       type="password"
                       name="password"
                       placeholder="Password"
@@ -107,7 +107,7 @@ export function Register({ context, username, email, errors }: AuthForm) {
                   </fieldset>
                   <button
                     type="submit"
-                    className="btn btn-lg btn-primary pull-xs-right"
+                    class="btn btn-lg btn-primary pull-xs-right"
                   >
                     Sign up
                   </button>

@@ -1,20 +1,23 @@
 import { bundler } from "@backtickjs/bundler";
-import type { JSX } from "@backtickjs/jsx-react/jsx-runtime";
+import { cs } from "@backtickjs/core";
+import type { JSX } from "@backtickjs/jsx-solid/jsx-runtime";
 
-// The versions of React the page loads, below: what each page is bundled for.
+// The version of Solid the page loads, below: what each page is bundled for.
 const modules = {
-  react: "19.2.3",
-  "react/jsx-runtime": "19.2.3",
-  "react-dom/client": "19.2.3",
+  "solid-js": "1.9.17",
+  "solid-js/web": "1.9.17",
 };
 
 // Development unless NODE_ENV says production, as hosts set it for a deploy.
 const development = process.env.NODE_ENV !== "production";
 
-// A page: its element, bundled for the browser, which the page's entry draws
-// with React's `createRoot`, and React from a CDN.
+// A page: its element as a component, bundled for the browser, which the
+// page's entry draws with Solid's `render`, and Solid's minified build from a
+// CDN. Solid makes a page's nodes when `render` calls its component, so the
+// element is spliced into one.
 export async function toHtml(element: JSX.Element): Promise<string> {
-  const bundle = await bundler.build({ input: element, modules });
+  const page = cs`() => $element`;
+  const bundle = await bundler.build({ input: page, modules });
   // In development, a map back to the files you wrote, for the browser's
   // devtools.
   const { code } = bundle.generate({
@@ -37,9 +40,8 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <script type="importmap">
       {
         "imports": {
-          "react": "https://esm.sh/react@19.2.3",
-          "react/jsx-runtime": "https://esm.sh/react@19.2.3/jsx-runtime",
-          "react-dom/client": "https://esm.sh/react-dom@19.2.3/client?external=react"
+          "solid-js": "https://cdn.jsdelivr.net/npm/solid-js@1.9.17/dist/solid.min.js",
+          "solid-js/web": "https://cdn.jsdelivr.net/npm/solid-js@1.9.17/web/dist/web.min.js"
         }
       }
     </script>
@@ -47,9 +49,9 @@ export async function toHtml(element: JSX.Element): Promise<string> {
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createRoot } from "react-dom/client";
-      import page from "data:text/javascript,${encodeURIComponent(code)}";
-      createRoot(document.getElementById("app")).render(page);
+      import { render } from "solid-js/web";
+      import Page from "data:text/javascript,${encodeURIComponent(code)}";
+      render(Page, document.getElementById("app"));
     </script>
   </body>
 </html>`;

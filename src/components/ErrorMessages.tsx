@@ -10,6 +10,6 @@ export function ErrorMessages({ errors }: { errors?: Errors }) {
     return null;
   }
 
-  const items = lines.map((line) => cs`<li key={$line}>{$line}</li>`);
-  return cs`<ul className="error-messages">{$items}</ul>`;
+  const items = lines.map((line) => cs`<li>{$line}</li>`);
+  return cs`<ul class="error-messages">{$items}</ul>`;
 }

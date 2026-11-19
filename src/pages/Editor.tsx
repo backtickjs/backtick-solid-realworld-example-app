@@ -55,45 +55,45 @@ export async function Editor({
       path={slug === undefined ? "/editor" : `/editor/${slug}`}
     >
       {cs`(
-        <div className="editor-page">
-          <div className="container page">
-            <div className="row">
-              <div className="col-md-10 offset-md-1 col-xs-12">
+        <div class="editor-page">
+          <div class="container page">
+            <div class="row">
+              <div class="col-md-10 offset-md-1 col-xs-12">
                 {$errorMessages}
                 <form method="post">
                   <fieldset>
-                    <fieldset className="form-group">
+                    <fieldset class="form-group">
                       <input
                         type="text"
-                        className="form-control form-control-lg"
+                        class="form-control form-control-lg"
                         name="title"
                         placeholder="Article Title"
-                        defaultValue={${draft.title}}
+                        value={${draft.title}}
                       />
                     </fieldset>
-                    <fieldset className="form-group">
+                    <fieldset class="form-group">
                       <input
                         type="text"
-                        className="form-control"
+                        class="form-control"
                         name="description"
                         placeholder="What's this article about?"
-                        defaultValue={${draft.description}}
+                        value={${draft.description}}
                       />
                     </fieldset>
-                    <fieldset className="form-group">
+                    <fieldset class="form-group">
                       <textarea
-                        className="form-control"
+                        class="form-control"
                         rows={8}
                         name="body"
                         placeholder="Write your article (in markdown)"
-                        defaultValue={${draft.body}}
+                        value={${draft.body}}
                       ></textarea>
                     </fieldset>
-                    <fieldset className="form-group">
+                    <fieldset class="form-group">
                       <$TagInput initial={${draft.tagList}} />
                     </fieldset>
                     <button
-                      className="btn btn-lg pull-xs-right btn-primary"
+                      class="btn btn-lg pull-xs-right btn-primary"
                       type="submit"
                     >
                       Publish Article

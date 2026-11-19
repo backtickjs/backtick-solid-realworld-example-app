@@ -71,9 +71,8 @@ export async function Home({
   const popular = tags.map(
     (tag) => cs`(
       <a
-        key={$tag}
         href={${`/tag/${encodeURIComponent(tag)}`}}
-        className="tag-pill tag-default"
+        class="tag-pill tag-default"
       >
         {$tag}
       </a>
@@ -102,25 +101,25 @@ export async function Home({
   return (
     <Layout user={user} path="/">
       {cs`(
-        <div className="home-page">
-          <div className="banner">
-            <div className="container">
-              <h1 className="logo-font">conduit</h1>
+        <div class="home-page">
+          <div class="banner">
+            <div class="container">
+              <h1 class="logo-font">conduit</h1>
               <p>A place to share your knowledge.</p>
             </div>
           </div>
-          <div className="container page">
-            <div className="row">
-              <div className="col-md-9">
-                <div className="feed-toggle">
-                  <ul className="nav nav-pills outline-active">{$tabs}</ul>
+          <div class="container page">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="feed-toggle">
+                  <ul class="nav nav-pills outline-active">{$tabs}</ul>
                 </div>
                 {$list}
               </div>
-              <div className="col-md-3">
-                <div className="sidebar">
+              <div class="col-md-3">
+                <div class="sidebar">
                   <p>Popular Tags</p>
-                  <div className="tag-list">{$popular}</div>
+                  <div class="tag-list">{$popular}</div>
                 </div>
               </div>
             </div>

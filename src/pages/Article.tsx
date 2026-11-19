@@ -52,24 +52,24 @@ export async function Article({
   return (
     <Layout user={user} path={`/article/${article.slug}`}>
       {cs`(
-        <div className="article-page">
-          <div className="banner">
-            <div className="container">
+        <div class="article-page">
+          <div class="banner">
+            <div class="container">
               <h1>{${article.title}}</h1>
               {$meta}
             </div>
           </div>
-          <div className="container page">
-            <div className="row article-content">
-              <div className="col-md-12">
-                <div dangerouslySetInnerHTML={{ __html: $body }} />
+          <div class="container page">
+            <div class="row article-content">
+              <div class="col-md-12">
+                <div innerHTML={$body} />
                 {$tags}
               </div>
             </div>
             <hr />
-            <div className="article-actions">{$meta}</div>
-            <div className="row">
-              <div className="col-xs-12 col-md-8 offset-md-2">
+            <div class="article-actions">{$meta}</div>
+            <div class="row">
+              <div class="col-xs-12 col-md-8 offset-md-2">
                 {$commentForm}
                 {$cards}
               </div>
@@ -86,19 +86,19 @@ function CommentForm({ slug, user }: { slug: string; user: User }) {
     <form
       method="post"
       action={${`/article/${slug}/comments`}}
-      className="card comment-form"
+      class="card comment-form"
     >
-      <div className="card-block">
+      <div class="card-block">
         <textarea
-          className="form-control"
+          class="form-control"
           name="comment"
           placeholder="Write a comment..."
           rows={3}
         ></textarea>
       </div>
-      <div className="card-footer">
-        <img src={${avatarOf(user.image)}} className="comment-author-img" />
-        <button type="submit" className="btn btn-sm btn-primary">
+      <div class="card-footer">
+        <img src={${avatarOf(user.image)}} class="comment-author-img" />
+        <button type="submit" class="btn btn-sm btn-primary">
           Post Comment
         </button>
       </div>
@@ -120,7 +120,7 @@ function CommentCard({
   const remove =
     user?.username === comment.author.username
       ? cs`(
-          <span className="mod-options">
+          <span class="mod-options">
             <form
               method="post"
               action={${`/article/${slug}/comments/${comment.id}/delete`}}
@@ -130,35 +130,35 @@ function CommentCard({
                 type="submit"
                 aria-label="Delete comment"
                 style={{
-                  border: 0,
-                  padding: 0,
+                  border: "0",
+                  padding: "0",
                   background: "none",
                   color: "inherit",
                 }}
               >
-                <i className="ion-trash-a"></i>
+                <i class="ion-trash-a"></i>
               </button>
             </form>
           </span>
         )`
       : null;
   return cs`(
-    <div key={${comment.id}} className="card">
-      <div className="card-block">
-        <p className="card-text">{${comment.body}}</p>
+    <div class="card">
+      <div class="card-block">
+        <p class="card-text">{${comment.body}}</p>
       </div>
-      <div className="card-footer">
-        <a href={$profile} className="comment-author">
+      <div class="card-footer">
+        <a href={$profile} class="comment-author">
           <img
             src={${avatarOf(comment.author.image)}}
-            className="comment-author-img"
+            class="comment-author-img"
           />
         </a>
         &nbsp;
-        <a href={$profile} className="comment-author">
+        <a href={$profile} class="comment-author">
           {${comment.author.username}}
         </a>
-        <span className="date-posted">{${formatDate(comment.createdAt)}}</span>
+        <span class="date-posted">{${formatDate(comment.createdAt)}}</span>
         {$remove}
       </div>
     </div>

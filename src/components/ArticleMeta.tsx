@@ -20,10 +20,10 @@ export function ArticleMeta({
       cs`(
         <>
           <a
-            className="btn btn-sm btn-outline-secondary"
+            class="btn btn-sm btn-outline-secondary"
             href={${`/editor/${slug}`}}
           >
-            <i className="ion-edit"></i> Edit Article
+            <i class="ion-edit"></i> Edit Article
           </a>
           &nbsp;
           <form
@@ -31,8 +31,8 @@ export function ArticleMeta({
             action={${`/article/${slug}/delete`}}
             style={{ display: "inline" }}
           >
-            <button type="submit" className="btn btn-sm btn-outline-danger">
-              <i className="ion-trash-a"></i> Delete Article
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              <i class="ion-trash-a"></i> Delete Article
             </button>
           </form>
         </>
@@ -46,15 +46,15 @@ export function ArticleMeta({
     );
 
   return cs`(
-    <div className="article-meta">
+    <div class="article-meta">
       <a href={$profile}>
         <img src={${avatarOf(author.image)}} />
       </a>
-      <div className="info">
-        <a href={$profile} className="author">
+      <div class="info">
+        <a href={$profile} class="author">
           {${author.username}}
         </a>
-        <span className="date">{${formatDate(article.createdAt)}}</span>
+        <span class="date">{${formatDate(article.createdAt)}}</span>
       </div>
       {$actions}
     </div>
@@ -74,11 +74,8 @@ export function FollowButton({
   return cs`(
     <form method="post" action={$action} style={{ display: "inline" }}>
       <input type="hidden" name="back" value={$back} />
-      <button
-        type="submit"
-        className="btn btn-sm btn-outline-secondary action-btn"
-      >
-        <i className="ion-plus-round"></i>
+      <button type="submit" class="btn btn-sm btn-outline-secondary action-btn">
+        <i class="ion-plus-round"></i>
         &nbsp; {$label}
       </button>
     </form>
@@ -93,16 +90,16 @@ function FavoriteButton({ article, back }: { article: Article; back: string }) {
       <input type="hidden" name="back" value={$back} />
       <button
         type="submit"
-        className={
+        class={
           ${article.favorited
             ? "btn btn-sm btn-primary"
             : "btn btn-sm btn-outline-primary"}
         }
       >
-        <i className="ion-heart"></i>
+        <i class="ion-heart"></i>
         &nbsp;{" "}
         {${article.favorited ? "Unfavorite Article" : "Favorite Article"}}{" "}
-        <span className="counter">({${article.favoritesCount}})</span>
+        <span class="counter">({${article.favoritesCount}})</span>
       </button>
     </form>
   )`;

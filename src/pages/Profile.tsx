@@ -52,11 +52,8 @@ export async function Profile({
   const action =
     user?.username === username ? (
       cs`(
-        <a
-          className="btn btn-sm btn-outline-secondary action-btn"
-          href="/settings"
-        >
-          <i className="ion-gear-a"></i>
+        <a class="btn btn-sm btn-outline-secondary action-btn" href="/settings">
+          <i class="ion-gear-a"></i>
           &nbsp; Edit Profile Settings
         </a>
       )`
@@ -86,12 +83,12 @@ export async function Profile({
   return (
     <Layout user={user} path={home}>
       {cs`(
-        <div className="profile-page">
-          <div className="user-info">
-            <div className="container">
-              <div className="row">
-                <div className="col-xs-12 col-md-10 offset-md-1">
-                  <img src={${avatarOf(image)}} className="user-img" />
+        <div class="profile-page">
+          <div class="user-info">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-12 col-md-10 offset-md-1">
+                  <img src={${avatarOf(image)}} class="user-img" />
                   <h4>{$username}</h4>
                   <p>{${bio ?? ""}}</p>
                   {$action}
@@ -99,11 +96,11 @@ export async function Profile({
               </div>
             </div>
           </div>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-md-10 offset-md-1">
-                <div className="articles-toggle">
-                  <ul className="nav nav-pills outline-active">{$tabs}</ul>
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12 col-md-10 offset-md-1">
+                <div class="articles-toggle">
+                  <ul class="nav nav-pills outline-active">{$tabs}</ul>
                 </div>
                 {$list}
               </div>

@@ -8,7 +8,7 @@ export function NotFound({ context }: { context: Context<AppEnv> }) {
   return (
     <Layout user={context.get("user")} path="">
       {cs`(
-        <div className="container page">
+        <div class="container page">
           <h1>Page not found</h1>
           <p>
             <a href="/">Back to the home page</a>
