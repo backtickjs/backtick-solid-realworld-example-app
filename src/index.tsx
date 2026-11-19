@@ -5,7 +5,6 @@ import { contextStorage } from "hono/context-storage";
 import { HTTPException } from "hono/http-exception";
 import { client } from "./api/client.js";
 import { toHtml } from "./html.js";
-import { Redirect } from "./navigation.js";
 import { Article } from "./pages/Article.js";
 import { Login, Register } from "./pages/Auth.js";
 import { type Draft, Editor } from "./pages/Editor.js";
@@ -13,12 +12,21 @@ import { type Feed, Home } from "./pages/Home.js";
 import { NotFound } from "./pages/NotFound.js";
 import { Profile } from "./pages/Profile.js";
 import { Settings } from "./pages/Settings.js";
-import { requireUser, signIn, signOut } from "./session.js";
+import {
+  type AppEnv,
+  session,
+  signedIn,
+  signedOut,
+  signIn,
+  signOut,
+} from "./session.js";
 
-const app = new Hono();
+const app = new Hono<AppEnv>();
 
-// The request, for what any component asks of it: the signed-in user.
+// The request, for what any component asks of it, and the signed-in user,
+// from the session cookie: `context.get("user")`.
 app.use(contextStorage());
+app.use(session);
 
 // The app's own files: its icons.
 app.use("/*", serveStatic({ root: "./public" }));
@@ -33,58 +41,80 @@ app.use(
   serveStatic({ path: "./realworld/assets/media/default-avatar.svg" }),
 );
 
-// Pages. Each fetches what it shows, and answers not found or redirects
-// itself (navigation.ts).
+// Pages. A route passes the page its request and what the URL names; the
+// page fetches what it shows, and redirects or answers not found itself.
 
 app.get("/", async (context) => {
+  const following = context.req.query("feed") === "following";
+  const feed: Feed = following ? { kind: "following" } : { kind: "global" };
   const page = pageOf(context.req.query("page"));
-  const feed: Feed =
-    context.req.query("feed") === "following"
-      ? { kind: "following" }
-      : { kind: "global" };
-  return context.html(await toHtml(<Home feed={feed} page={page} />));
+  return context.html(
+    await toHtml(<Home context={context} feed={feed} page={page} />),
+  );
 });
 app.get("/tag/:tag", async (context) => {
   const feed: Feed = { kind: "tag", tag: context.req.param("tag") };
   const page = pageOf(context.req.query("page"));
-  return context.html(await toHtml(<Home feed={feed} page={page} />));
+  return context.html(
+    await toHtml(<Home context={context} feed={feed} page={page} />),
+  );
 });
 
 app.get("/article/:slug", async (context) =>
-  context.html(await toHtml(<Article slug={context.req.param("slug")} />)),
+  context.html(
+    await toHtml(
+      <Article context={context} slug={context.req.param("slug")} />,
+    ),
+  ),
 );
 
-app.get("/profile/:username", async (context) => {
-  const username = context.req.param("username");
-  const page = pageOf(context.req.query("page"));
-  return context.html(
-    await toHtml(<Profile username={username} tab="articles" page={page} />),
-  );
-});
-app.get("/profile/:username/favorites", async (context) => {
-  const username = context.req.param("username");
-  const page = pageOf(context.req.query("page"));
-  return context.html(
-    await toHtml(<Profile username={username} tab="favorites" page={page} />),
-  );
-});
+app.get("/profile/:username", async (context) =>
+  context.html(
+    await toHtml(
+      <Profile
+        context={context}
+        username={context.req.param("username")}
+        tab="articles"
+        page={pageOf(context.req.query("page"))}
+      />,
+    ),
+  ),
+);
+app.get("/profile/:username/favorites", async (context) =>
+  context.html(
+    await toHtml(
+      <Profile
+        context={context}
+        username={context.req.param("username")}
+        tab="favorites"
+        page={pageOf(context.req.query("page"))}
+      />,
+    ),
+  ),
+);
 
-app.get("/login", async (context) => context.html(await toHtml(<Login />)));
-app.get("/register", async (context) =>
-  context.html(await toHtml(<Register />)),
+app.get("/login", signedOut, async (context) =>
+  context.html(await toHtml(<Login context={context} />)),
 );
-app.get("/settings", async (context) =>
-  context.html(await toHtml(<Settings />)),
+app.get("/register", signedOut, async (context) =>
+  context.html(await toHtml(<Register context={context} />)),
 );
-app.get("/editor", async (context) => context.html(await toHtml(<Editor />)));
-app.get("/editor/:slug", async (context) =>
-  context.html(await toHtml(<Editor slug={context.req.param("slug")} />)),
+app.get("/settings", signedIn, async (context) =>
+  context.html(await toHtml(<Settings context={context} />)),
+);
+app.get("/editor", signedIn, async (context) =>
+  context.html(await toHtml(<Editor context={context} />)),
+);
+app.get("/editor/:slug", signedIn, async (context) =>
+  context.html(
+    await toHtml(<Editor context={context} slug={context.req.param("slug")} />),
+  ),
 );
 
 // Forms. Each does what it was sent for and redirects, or shows its page
 // again with what the API refused.
 
-app.post("/login", async (context) => {
+app.post("/login", signedOut, async (context) => {
   const form = await context.req.parseBody();
   const email = text(form.email);
   const { data, error } = await client.POST("/users/login", {
@@ -92,15 +122,17 @@ app.post("/login", async (context) => {
   });
   if (!data) {
     return context.html(
-      await toHtml(<Login email={email} errors={error.errors} />),
+      await toHtml(
+        <Login context={context} email={email} errors={error.errors} />,
+      ),
       422,
     );
   }
-  signIn(data.user);
+  signIn(context, data.user);
   return context.redirect(pathOf(context.req.query("next")), 303);
 });
 
-app.post("/register", async (context) => {
+app.post("/register", signedOut, async (context) => {
   const form = await context.req.parseBody();
   const username = text(form.username);
   const email = text(form.email);
@@ -110,17 +142,21 @@ app.post("/register", async (context) => {
   if (!data) {
     return context.html(
       await toHtml(
-        <Register username={username} email={email} errors={error.errors} />,
+        <Register
+          context={context}
+          username={username}
+          email={email}
+          errors={error.errors}
+        />,
       ),
       422,
     );
   }
-  signIn(data.user);
+  signIn(context, data.user);
   return context.redirect(pathOf(context.req.query("next")), 303);
 });
 
-app.post("/settings", async (context) => {
-  requireUser();
+app.post("/settings", signedIn, async (context) => {
   const form = await context.req.parseBody();
   const values = {
     image: text(form.image),
@@ -135,36 +171,38 @@ app.post("/settings", async (context) => {
   });
   if (!data) {
     return context.html(
-      await toHtml(<Settings values={values} errors={error.errors} />),
+      await toHtml(
+        <Settings context={context} values={values} errors={error.errors} />,
+      ),
       422,
     );
   }
   // The cookie keeps the user as the API now answers them.
-  signIn(data.user);
+  signIn(context, data.user);
   return context.redirect(`/profile/${data.user.username}`, 303);
 });
 
 app.post("/logout", (context) => {
-  signOut();
+  signOut(context);
   return context.redirect("/", 303);
 });
 
-app.post("/editor", async (context) => {
-  requireUser();
+app.post("/editor", signedIn, async (context) => {
   const draft = draftOf(await context.req.parseBody({ all: true }));
   const { data, error } = await client.POST("/articles", {
     body: { article: draft },
   });
   if (!data) {
     return context.html(
-      await toHtml(<Editor draft={draft} errors={error.errors} />),
+      await toHtml(
+        <Editor context={context} draft={draft} errors={error.errors} />,
+      ),
       422,
     );
   }
   return context.redirect(`/article/${data.article.slug}`, 303);
 });
-app.post("/editor/:slug", async (context) => {
-  requireUser();
+app.post("/editor/:slug", signedIn, async (context) => {
   const slug = context.req.param("slug");
   const draft = draftOf(await context.req.parseBody({ all: true }));
   const { data, error, response } = await client.PUT("/articles/{slug}", {
@@ -177,37 +215,40 @@ app.post("/editor/:slug", async (context) => {
   }
   if (!data) {
     return context.html(
-      await toHtml(<Editor slug={slug} draft={draft} errors={error.errors} />),
+      await toHtml(
+        <Editor
+          context={context}
+          slug={slug}
+          draft={draft}
+          errors={error.errors}
+        />,
+      ),
       422,
     );
   }
   return context.redirect(`/article/${data.article.slug}`, 303);
 });
 
-app.post("/article/:slug/delete", async (context) => {
-  requireUser();
+app.post("/article/:slug/delete", signedIn, async (context) => {
   await client.DELETE("/articles/{slug}", {
     params: { path: { slug: context.req.param("slug") } },
   });
   return context.redirect("/", 303);
 });
-app.post("/article/:slug/favorite", async (context) => {
-  requireUser();
+app.post("/article/:slug/favorite", signedIn, async (context) => {
   await client.POST("/articles/{slug}/favorite", {
     params: { path: { slug: context.req.param("slug") } },
   });
   return context.redirect(backOf(await context.req.parseBody()), 303);
 });
-app.post("/article/:slug/unfavorite", async (context) => {
-  requireUser();
+app.post("/article/:slug/unfavorite", signedIn, async (context) => {
   await client.DELETE("/articles/{slug}/favorite", {
     params: { path: { slug: context.req.param("slug") } },
   });
   return context.redirect(backOf(await context.req.parseBody()), 303);
 });
 
-app.post("/article/:slug/comments", async (context) => {
-  requireUser();
+app.post("/article/:slug/comments", signedIn, async (context) => {
   const slug = context.req.param("slug");
   const form = await context.req.parseBody();
   await client.POST("/articles/{slug}/comments", {
@@ -216,8 +257,7 @@ app.post("/article/:slug/comments", async (context) => {
   });
   return context.redirect(`/article/${slug}`, 303);
 });
-app.post("/article/:slug/comments/:id/delete", async (context) => {
-  requireUser();
+app.post("/article/:slug/comments/:id/delete", signedIn, async (context) => {
   const slug = context.req.param("slug");
   await client.DELETE("/articles/{slug}/comments/{id}", {
     params: { path: { slug, id: Number(context.req.param("id")) } },
@@ -225,31 +265,30 @@ app.post("/article/:slug/comments/:id/delete", async (context) => {
   return context.redirect(`/article/${slug}`, 303);
 });
 
-app.post("/profile/:username/follow", async (context) => {
-  requireUser();
+app.post("/profile/:username/follow", signedIn, async (context) => {
   await client.POST("/profiles/{username}/follow", {
     params: { path: { username: context.req.param("username") } },
   });
   return context.redirect(backOf(await context.req.parseBody()), 303);
 });
-app.post("/profile/:username/unfollow", async (context) => {
-  requireUser();
+app.post("/profile/:username/unfollow", signedIn, async (context) => {
   await client.DELETE("/profiles/{username}/follow", {
     params: { path: { username: context.req.param("username") } },
   });
   return context.redirect(backOf(await context.req.parseBody()), 303);
 });
 
-app.notFound(async (context) => context.html(await toHtml(<NotFound />), 404));
+app.notFound(async (context) =>
+  context.html(await toHtml(<NotFound context={context} />), 404),
+);
 
-// What a page's `notFound()` and `redirect()` throw, answered; anything else
-// answered rather than crashed on, so the browser can show why.
+// What a page throws to stop: Hono's HTTPException, a 404 answered with the
+// not-found page and anything else with the response it carries. Any other
+// error is answered rather than crashed on, so the browser can show why.
 app.onError(async (error, context) => {
-  // Through the context, which keeps the cookies set before it.
-  if (error instanceof Redirect) return context.redirect(error.location, 303);
   if (error instanceof HTTPException) {
     if (error.status === 404) {
-      return context.html(await toHtml(<NotFound />), 404);
+      return context.html(await toHtml(<NotFound context={context} />), 404);
     }
     return error.getResponse();
   }

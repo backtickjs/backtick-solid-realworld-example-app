@@ -116,7 +116,9 @@ function Pagination({
   page: number;
   hrefOf: (n: number) => string;
 }) {
-  if (pageCount <= 1) return null;
+  if (pageCount <= 1) {
+    return null;
+  }
   const links = Array.from({ length: pageCount }, (_, i) => {
     const n = i + 1;
     return cs`(

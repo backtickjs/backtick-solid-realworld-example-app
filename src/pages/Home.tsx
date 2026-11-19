@@ -2,19 +2,32 @@ import { cs } from "@backtickjs/core";
 import { ArticleList, PAGE_SIZE } from "../components/ArticleList.js";
 import { Layout } from "../components/Layout.js";
 import { NavItem } from "../components/NavItem.js";
+import type { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { client } from "../api/client.js";
-import { currentUser, requireUser } from "../session.js";
+import type { AppEnv } from "../session.js";
 
 // Which articles the home page lists.
 export type Feed =
   { kind: "global" } | { kind: "following" } | { kind: "tag"; tag: string };
 
-// The home page: a feed of articles, and the popular tags beside it.
-export async function Home({ feed, page }: { feed: Feed; page: number }) {
+// The home page: a page of a feed, and the popular tags beside it.
+export async function Home({
+  context,
+  feed,
+  page,
+}: {
+  context: Context<AppEnv>;
+  feed: Feed;
+  page: number;
+}) {
+  const user = context.get("user");
   // Your Feed is a signed-in user's.
-  const user = feed.kind === "following" ? requireUser() : currentUser();
+  if (feed.kind === "following" && !user) {
+    throw new HTTPException(303, { res: context.redirect("/login") });
+  }
   const query = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
-  const [articles, tags] = await Promise.all([
+  const [articlesResponse, tagsResponse] = await Promise.all([
     feed.kind === "following"
       ? client.GET("/articles/feed", { params: { query } })
       : client.GET("/articles", {
@@ -27,8 +40,11 @@ export async function Home({ feed, page }: { feed: Feed; page: number }) {
         }),
     client.GET("/tags"),
   ]);
-  if (!articles.data) throw new Error("Couldn't load the articles");
-
+  if (!articlesResponse.data) {
+    throw new Error("Couldn't load the articles");
+  }
+  const { articles, articlesCount } = articlesResponse.data;
+  const tags = tagsResponse.data?.tags ?? [];
   const tabs = (
     <>
       {user ? (
@@ -52,7 +68,7 @@ export async function Home({ feed, page }: { feed: Feed; page: number }) {
       ) : null}
     </>
   );
-  const popular = (tags.data?.tags ?? []).map(
+  const popular = tags.map(
     (tag) => cs`(
       <a
         key={$tag}
@@ -65,8 +81,8 @@ export async function Home({ feed, page }: { feed: Feed; page: number }) {
   );
   const list = (
     <ArticleList
-      articles={articles.data.articles}
-      articlesCount={articles.data.articlesCount}
+      articles={articles}
+      articlesCount={articlesCount}
       page={page}
       hrefOf={(n) => hrefOf(feed, n)}
       back={hrefOf(feed, page)}
@@ -84,7 +100,7 @@ export async function Home({ feed, page }: { feed: Feed; page: number }) {
   );
 
   return (
-    <Layout path="/">
+    <Layout user={user} path="/">
       {cs`(
         <div className="home-page">
           <div className="banner">
@@ -120,7 +136,11 @@ function hrefOf(feed: Feed, page = 1) {
   const path =
     feed.kind === "tag" ? `/tag/${encodeURIComponent(feed.tag)}` : "/";
   const query = new URLSearchParams();
-  if (feed.kind === "following") query.set("feed", "following");
-  if (page > 1) query.set("page", String(page));
+  if (feed.kind === "following") {
+    query.set("feed", "following");
+  }
+  if (page > 1) {
+    query.set("page", String(page));
+  }
   return query.size === 0 ? path : `${path}?${query}`;
 }

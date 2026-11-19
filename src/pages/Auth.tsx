@@ -1,24 +1,24 @@
 import { cs } from "@backtickjs/core";
+import type { Context } from "hono";
 import type { Errors } from "../api/types.js";
 import { ErrorMessages } from "../components/ErrorMessages.js";
 import { Layout } from "../components/Layout.js";
-import { redirect } from "../navigation.js";
-import { currentUser } from "../session.js";
+import type { SignedOutEnv } from "../session.js";
 
 // What the form was sent with, to fill it again when the API refuses it. Never
 // the password.
 export interface AuthForm {
+  context: Context<SignedOutEnv>;
   username?: string;
   email?: string;
   errors?: Errors;
 }
 
-// The sign-in page, at /login: home instead for a signed-in user.
-export function Login({ email, errors }: AuthForm) {
-  if (currentUser()) redirect("/");
+// The sign-in page, at /login.
+export function Login({ context, email, errors }: AuthForm) {
   const errorMessages = <ErrorMessages errors={errors} />;
   return (
-    <Layout path="/login">
+    <Layout user={context.get("user")} path="/login">
       {cs`(
         <div className="auth-page">
           <div className="container page">
@@ -63,12 +63,11 @@ export function Login({ email, errors }: AuthForm) {
   );
 }
 
-// The sign-up page, at /register: home instead for a signed-in user.
-export function Register({ username, email, errors }: AuthForm) {
-  if (currentUser()) redirect("/");
+// The sign-up page, at /register.
+export function Register({ context, username, email, errors }: AuthForm) {
   const errorMessages = <ErrorMessages errors={errors} />;
   return (
-    <Layout path="/register">
+    <Layout user={context.get("user")} path="/register">
       {cs`(
         <div className="auth-page">
           <div className="container page">

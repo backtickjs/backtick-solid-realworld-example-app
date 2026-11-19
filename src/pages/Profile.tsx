@@ -3,24 +3,26 @@ import { ArticleList, PAGE_SIZE } from "../components/ArticleList.js";
 import { FollowButton } from "../components/ArticleMeta.js";
 import { Layout } from "../components/Layout.js";
 import { NavItem } from "../components/NavItem.js";
+import type { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { client } from "../api/client.js";
 import { avatarOf } from "../format.js";
-import { notFound } from "../navigation.js";
-import { currentUser } from "../session.js";
+import type { AppEnv } from "../session.js";
 
 // A profile, and the articles its user wrote or favorited.
 export async function Profile({
+  context,
   username,
   tab,
   page,
 }: {
+  context: Context<AppEnv>;
   username: string;
   tab: "articles" | "favorites";
   page: number;
 }) {
-  const home = `/profile/${encodeURIComponent(username)}`;
-  const user = currentUser();
-  const [found, articles] = await Promise.all([
+  const user = context.get("user");
+  const [profileResponse, articlesResponse] = await Promise.all([
     client.GET("/profiles/{username}", { params: { path: { username } } }),
     client.GET("/articles", {
       params: {
@@ -34,9 +36,15 @@ export async function Profile({
       },
     }),
   ]);
-  if (!found.data) notFound();
-  if (!articles.data) throw new Error("Couldn't load the articles");
-  const { profile } = found.data;
+  if (!profileResponse.data) {
+    throw new HTTPException(404);
+  }
+  if (!articlesResponse.data) {
+    throw new Error("Couldn't load the articles");
+  }
+  const { profile } = profileResponse.data;
+  const { articles, articlesCount } = articlesResponse.data;
+  const home = `/profile/${encodeURIComponent(username)}`;
   const { image, bio } = profile;
   const tabHref = tab === "articles" ? home : `${home}/favorites`;
   const hrefOf = (n: number) => (n === 1 ? tabHref : `${tabHref}?page=${n}`);
@@ -67,8 +75,8 @@ export async function Profile({
   );
   const list = (
     <ArticleList
-      articles={articles.data.articles}
-      articlesCount={articles.data.articlesCount}
+      articles={articles}
+      articlesCount={articlesCount}
       page={page}
       hrefOf={hrefOf}
       back={hrefOf(page)}
@@ -76,7 +84,7 @@ export async function Profile({
   );
 
   return (
-    <Layout path={home}>
+    <Layout user={user} path={home}>
       {cs`(
         <div className="profile-page">
           <div className="user-info">

@@ -1,19 +1,21 @@
 import { cs, type Client } from "@backtickjs/core";
 import type { JSX } from "@backtickjs/jsx-react/jsx-runtime";
 import { avatarOf } from "../format.js";
-import { currentUser } from "../session.js";
 import { NavItem } from "./NavItem.js";
+import type { User } from "../api/types.js";
 
 // The header and footer around every page. `path` is the page's, to mark its
 // link active.
 export function Layout({
+  user,
   path,
   children,
 }: {
+  // The signed-in user, for the header's links, or null.
+  user: User | null;
   path: string;
   children: JSX.Element | Client<JSX.Element>;
 }) {
-  const user = currentUser();
   const links = user ? (
     <>
       <NavItem href="/" active={path === "/"}>

@@ -1,11 +1,12 @@
 import { cs } from "@backtickjs/core";
+import type { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { client } from "../api/client.js";
 import type { Errors } from "../api/types.js";
 import { ErrorMessages } from "../components/ErrorMessages.js";
 import { Layout } from "../components/Layout.js";
 import { TagInput } from "../components/TagInput.js";
-import { notFound, redirect } from "../navigation.js";
-import { requireUser } from "../session.js";
+import type { SignedInEnv } from "../session.js";
 
 // What the editor sends.
 export interface Draft {
@@ -20,29 +21,39 @@ const EMPTY: Draft = { title: "", description: "", body: "", tagList: [] };
 // A new article at /editor, or an article being edited at /editor/:slug, by
 // its author. `draft` is what a refused form was sent with.
 export async function Editor({
+  context,
   slug,
   draft,
   errors,
 }: {
+  context: Context<SignedInEnv>;
   slug?: string;
   draft?: Draft;
   errors?: Errors;
 }) {
-  const user = requireUser();
+  const user = context.get("user");
   if (slug !== undefined && draft === undefined) {
     const { data } = await client.GET("/articles/{slug}", {
       params: { path: { slug } },
     });
-    if (!data) notFound();
+    if (!data) {
+      throw new HTTPException(404);
+    }
+    // Only its author edits it.
     if (data.article.author.username !== user.username) {
-      redirect(`/article/${slug}`);
+      throw new HTTPException(303, {
+        res: context.redirect(`/article/${slug}`),
+      });
     }
     draft = data.article;
   }
   draft ??= EMPTY;
   const errorMessages = <ErrorMessages errors={errors} />;
   return (
-    <Layout path={slug === undefined ? "/editor" : `/editor/${slug}`}>
+    <Layout
+      user={user}
+      path={slug === undefined ? "/editor" : `/editor/${slug}`}
+    >
       {cs`(
         <div className="editor-page">
           <div className="container page">

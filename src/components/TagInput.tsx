@@ -15,10 +15,14 @@ export const TagInput = cs`(props: { initial: string[] }) => {
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key !== "Enter") return;
+          if (event.key !== "Enter") {
+            return;
+          }
           event.preventDefault();
           const tag = draft.trim();
-          if (tag && !tags.includes(tag)) setTags([...tags, tag]);
+          if (tag && !tags.includes(tag)) {
+            setTags([...tags, tag]);
+          }
           setDraft("");
         }}
       />

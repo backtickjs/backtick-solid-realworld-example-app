@@ -1,23 +1,26 @@
 import { cs } from "@backtickjs/core";
+import type { Context } from "hono";
 import type { Errors, User } from "../api/types.js";
 import { ErrorMessages } from "../components/ErrorMessages.js";
 import { Layout } from "../components/Layout.js";
-import { requireUser } from "../session.js";
+import type { SignedInEnv } from "../session.js";
 
 // The signed-in user's settings, and the way out. `values` are what the form
 // was sent with when the API refused it.
 export function Settings({
+  context,
   values,
   errors,
 }: {
+  context: Context<SignedInEnv>;
   values?: Partial<User>;
   errors?: Errors;
 }) {
-  const user = requireUser();
+  const user = context.get("user");
   const form = { ...user, ...values };
   const errorMessages = <ErrorMessages errors={errors} />;
   return (
-    <Layout path="/settings">
+    <Layout user={user} path="/settings">
       {cs`(
         <div className="settings-page">
           <div className="container page">

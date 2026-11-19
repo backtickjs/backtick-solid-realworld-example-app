@@ -1,4 +1,6 @@
 import { cs } from "@backtickjs/core";
+import type { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { client } from "../api/client.js";
 import type { Comment, User } from "../api/types.js";
 import { TagList } from "../components/ArticleList.js";
@@ -6,19 +8,27 @@ import { ArticleMeta } from "../components/ArticleMeta.js";
 import { Layout } from "../components/Layout.js";
 import { avatarOf, formatDate } from "../format.js";
 import { renderMarkdown } from "../markdown.js";
-import { notFound } from "../navigation.js";
-import { currentUser } from "../session.js";
+import type { AppEnv } from "../session.js";
 
 // An article, its body rendered from Markdown, and its comments.
-export async function Article({ slug }: { slug: string }) {
-  const user = currentUser();
+export async function Article({
+  context,
+  slug,
+}: {
+  context: Context<AppEnv>;
+  slug: string;
+}) {
+  const user = context.get("user");
   const path = { slug };
-  const [found, comments] = await Promise.all([
+  const [articleResponse, commentsResponse] = await Promise.all([
     client.GET("/articles/{slug}", { params: { path } }),
     client.GET("/articles/{slug}/comments", { params: { path } }),
   ]);
-  if (!found.data) notFound();
-  const { article } = found.data;
+  if (!articleResponse.data) {
+    throw new HTTPException(404);
+  }
+  const { article } = articleResponse.data;
+  const comments = commentsResponse.data?.comments ?? [];
   const meta = <ArticleMeta article={article} user={user} />;
   const body = renderMarkdown(article.body);
   const tags = <TagList tags={article.tagList} />;
@@ -35,12 +45,12 @@ export async function Article({ slug }: { slug: string }) {
       </p>
     )`
   );
-  const cards = (comments.data?.comments ?? []).map((comment) => (
+  const cards = comments.map((comment) => (
     <CommentCard slug={article.slug} comment={comment} user={user} />
   ));
 
   return (
-    <Layout path={`/article/${article.slug}`}>
+    <Layout user={user} path={`/article/${article.slug}`}>
       {cs`(
         <div className="article-page">
           <div className="banner">
