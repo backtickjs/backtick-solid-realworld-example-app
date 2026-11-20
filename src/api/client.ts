@@ -12,9 +12,16 @@ export const client = createClient<paths>({
 
 client.use({
   onRequest({ request }) {
-    const user = getContext<AppEnv>().get("user");
+    const context = getContext<AppEnv>();
+    const user = context.get("user");
     if (user) {
       request.headers.set("Authorization", `Token ${user.token}`);
+    }
+    // The visitor's address, as Vercel sets it: the API keeps a few sessions
+    // per address, so without it every visitor shares this server's.
+    const visitor = context.req.header("x-forwarded-for");
+    if (visitor) {
+      request.headers.set("X-Forwarded-For", visitor);
     }
   },
   // A token the API no longer accepts signs the user out, to sign in again
