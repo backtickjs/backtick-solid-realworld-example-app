@@ -32,6 +32,7 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conduit</title>
+    <meta name="description" content="A RealWorld example app built with Backtick and Solid: a Medium clone with articles, comments, favorites and follows.">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700|Lora:400,700">
     <link rel="stylesheet" href="/assets/theme/styles.css">

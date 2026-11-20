@@ -37,7 +37,7 @@ export function Layout({
             href={${`/profile/${user.username}`}}
             active={${path === `/profile/${user.username}`}}
           >
-            <img src={${avatarOf(user.image)}} class="user-pic" />
+            <img src={${avatarOf(user.image)}} alt="" class="user-pic" />
             {${user.username}}
           </$NavItem>
         </>
@@ -72,7 +72,7 @@ export function Layout({
           </ul>
         </div>
       </nav>
-      {$children}
+      <main>{$children}</main>
       <footer>
         <div class="container">
           <a href="/" class="logo-font">

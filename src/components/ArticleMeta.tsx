@@ -47,7 +47,7 @@ export function ArticleMeta({
   return cs`(
     <div class="article-meta">
       <a href={$profile}>
-        <img src={${avatarOf(author.image)}} />
+        <img src={${avatarOf(author.image)}} alt={${author.username}} />
       </a>
       <div class="info">
         <a href={$profile} class="author">

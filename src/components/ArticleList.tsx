@@ -58,7 +58,10 @@ function ArticlePreview({ article }: { article: ArticleSummary }) {
     <div class="article-preview">
       <div class="article-meta">
         <a href={$profile}>
-          <img src={${avatarOf(article.author.image)}} />
+          <img
+            src={${avatarOf(article.author.image)}}
+            alt={${article.author.username}}
+          />
         </a>
         <div class="info">
           <a href={$profile} class="author">

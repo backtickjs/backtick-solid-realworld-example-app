@@ -102,7 +102,7 @@ function CommentForm({ slug, user }: { slug: string; user: User }) {
         ></textarea>
       </div>
       <div class="card-footer">
-        <img src={${avatarOf(user.image)}} class="comment-author-img" />
+        <img src={${avatarOf(user.image)}} alt="" class="comment-author-img" />
         <button type="submit" class="btn btn-sm btn-primary">
           Post Comment
         </button>
@@ -156,6 +156,7 @@ function CommentCard({
         <a href={$profile} class="comment-author">
           <img
             src={${avatarOf(comment.author.image)}}
+            alt={${comment.author.username}}
             class="comment-author-img"
           />
         </a>

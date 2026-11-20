@@ -66,7 +66,7 @@ export async function Profile({
             <div class="container">
               <div class="row">
                 <div class="col-xs-12 col-md-10 offset-md-1">
-                  <img src={${avatarOf(image)}} class="user-img" />
+                  <img src={${avatarOf(image)}} alt="" class="user-img" />
                   <h4>{$username}</h4>
                   <p>{${bio ?? ""}}</p>
                   {$action}
