@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "nodemon --exec \"node --enable-source-maps --import @backtickjs/node-plugin src/index.tsx\"",
-    "serve": "node --enable-source-maps --import @backtickjs/node-plugin src/index.tsx",
+    "start": "npm run assets && nodemon --exec \"node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts\"",
+    "serve": "npm run assets && node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts",
     "typecheck": "backtick-tsc --noEmit",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
     "e2e": "playwright test",
-    "generate:api": "npx -y openapi-typescript@7.13.0 realworld/specs/api/openapi.yml --root-types --root-types-no-schema-prefix -o src/api/schema.d.ts"
+    "generate:api": "npx -y openapi-typescript@7.13.0 realworld/specs/api/openapi.yml --root-types --root-types-no-schema-prefix -o src/api/schema.d.ts",
+    "assets": "rm -rf public/assets && mkdir -p public/assets/media && cp -R realworld/assets/theme public/assets/ && cp realworld/assets/media/*.svg public/assets/media/",
+    "build": "rm -rf dist && tspc -p tsconfig.build.json --noCheck && npm run assets"
   },
   "dependencies": {
     "@backtickjs/bundler": "0.5.2",
@@ -28,11 +30,13 @@
   "devDependencies": {
     "@backtickjs/prettier-plugin": "0.5.2",
     "@backtickjs/tsc": "0.5.2",
+    "@backtickjs/tspatch-plugin": "0.5.2",
     "@playwright/test": "1.64.1",
     "@types/node": "^25.9.1",
     "@types/sanitize-html": "2.16.2",
     "nodemon": "^3.1.14",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "ts-patch": "4.0.1"
   },
   "nodemonConfig": {
     "watch": [

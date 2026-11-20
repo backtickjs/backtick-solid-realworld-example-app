@@ -19,3 +19,10 @@ yarn-error.*
 test-results/
 playwright-report/
 
+
+# Build output: the compiled app, and RealWorld's files copied into public/
+dist/
+public/assets/
+
+# Vercel
+.vercel

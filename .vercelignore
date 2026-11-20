@@ -1,0 +1,9 @@
+# What a deploy leaves out: this machine's secrets and links, and what the
+# build makes again. Not public/assets: Vercel applies this file to the
+# build's output too, and would drop the theme the build copies there.
+.env*
+.vercel
+node_modules
+dist
+test-results
+playwright-report

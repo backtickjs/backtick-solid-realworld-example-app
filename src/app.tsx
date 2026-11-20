@@ -1,5 +1,3 @@
-import { serve } from "@hono/node-server";
-import { serveStatic } from "@hono/node-server/serve-static";
 import { type Context, Hono } from "hono";
 import { compress } from "hono/compress";
 import { contextStorage } from "hono/context-storage";
@@ -22,7 +20,9 @@ import {
   signOut,
 } from "./session.js";
 
-const app = new Hono<AppEnv>();
+// The Conduit: its pages and its forms. Vercel serves it from server.ts, and
+// src/dev.ts on this computer; both serve public/ as files first.
+export const app = new Hono<AppEnv>();
 
 // Every answer compressed: gzip or deflate, as the browser accepts.
 app.use(compress());
@@ -31,13 +31,6 @@ app.use(compress());
 // from the session cookie: `context.get("user")`.
 app.use(contextStorage());
 app.use(session);
-
-// The app's own files: its icons.
-app.use("/*", serveStatic({ root: "./public" }));
-
-// RealWorld's theme and images, from the submodule: /assets/theme/styles.css,
-// /assets/media/conduit-logo.svg.
-app.use("/assets/*", serveStatic({ root: "./realworld" }));
 
 // Pages. A route passes the page its request and what the URL names; the
 // page fetches what it shows, and redirects or answers not found itself.
@@ -347,7 +340,3 @@ function refererOf(context: Context, fallback: string) {
 function pathOf(path: string | undefined) {
   return path?.startsWith("/") && !path.startsWith("//") ? path : "/";
 }
-
-serve({ fetch: app.fetch, port: 3000 }, () => {
-  console.log("Backtick server on http://localhost:3000");
-});
