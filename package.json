@@ -11,7 +11,8 @@
     "format:check": "prettier --check --ignore-unknown .",
     "e2e": "playwright test",
     "generate:api": "npx -y openapi-typescript@7.13.0 realworld/specs/api/openapi.yml --root-types --root-types-no-schema-prefix -o src/api/schema.d.ts",
-    "build": "rm -rf dist && tspc -p tsconfig.build.json --noCheck"
+    "build": "rm -rf dist && tspc -p tsconfig.build.json --noCheck",
+    "preview": "NODE_ENV=production node dist/dev.js"
   },
   "dependencies": {
     "@backtickjs/bundler": "0.5.2",
