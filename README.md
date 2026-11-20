@@ -1,6 +1,6 @@
 # ![RealWorld Example App](logo.png)
 
-> ### [Backtick](https://backtickjs.dev) + [Solid](https://www.solidjs.com) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://realworld.show) spec and API.
+> ### [Backtick](https://backtickjs.dev) + [Solid](https://www.solidjs.com) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://docs.realworld.show/) spec and API.
 
 ### [Demo](https://realworld.backtickjs.dev)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/realworld-apps/realworld)
 
