@@ -20,9 +20,8 @@ test-results/
 playwright-report/
 
 
-# Build output: the compiled app, and RealWorld's files copied into public/
+# Build output: the compiled app
 dist/
-public/assets/
 
 # Vercel
 .vercel

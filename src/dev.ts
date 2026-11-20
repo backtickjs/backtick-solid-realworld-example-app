@@ -1,5 +1,5 @@
 // The Conduit on this computer, as Vercel serves it: public/ as files, then
-// the app. `npm run assets` puts RealWorld's theme and images in public/.
+// the app.
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";

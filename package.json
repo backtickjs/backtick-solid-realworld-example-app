@@ -4,15 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npm run assets && nodemon --exec \"node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts\"",
-    "serve": "npm run assets && node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts",
+    "start": "nodemon --exec \"node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts\"",
+    "serve": "node --enable-source-maps --import @backtickjs/node-plugin src/dev.ts",
     "typecheck": "backtick-tsc --noEmit",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
     "e2e": "playwright test",
     "generate:api": "npx -y openapi-typescript@7.13.0 realworld/specs/api/openapi.yml --root-types --root-types-no-schema-prefix -o src/api/schema.d.ts",
-    "assets": "rm -rf public/assets && mkdir -p public/assets/media && cp -R realworld/assets/theme public/assets/ && cp realworld/assets/media/*.svg public/assets/media/",
-    "build": "rm -rf dist && tspc -p tsconfig.build.json --noCheck && npm run assets"
+    "build": "rm -rf dist && tspc -p tsconfig.build.json --noCheck"
   },
   "dependencies": {
     "@backtickjs/bundler": "0.5.2",

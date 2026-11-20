@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { type Context, Hono } from "hono";
 import { compress } from "hono/compress";
 import { contextStorage } from "hono/context-storage";
@@ -26,6 +27,31 @@ export const app = new Hono<AppEnv>();
 
 // Every answer compressed: gzip or deflate, as the browser accepts.
 app.use(compress());
+
+// RealWorld's theme and the images the pages show, from the submodule. Each
+// is named so Vercel bundles it with the function; its CDN keeps them until
+// the next deploy.
+app.get(
+  "/assets/theme/styles.css",
+  asset(
+    new URL("../realworld/assets/theme/styles.css", import.meta.url),
+    "text/css",
+  ),
+);
+app.get(
+  "/assets/media/conduit-logo.svg",
+  asset(
+    new URL("../realworld/assets/media/conduit-logo.svg", import.meta.url),
+    "image/svg+xml",
+  ),
+);
+app.get(
+  "/assets/media/default-avatar.svg",
+  asset(
+    new URL("../realworld/assets/media/default-avatar.svg", import.meta.url),
+    "image/svg+xml",
+  ),
+);
 
 // The request, for what any component asks of it, and the signed-in user,
 // from the session cookie: `context.get("user")`.
@@ -339,4 +365,13 @@ function refererOf(context: Context, fallback: string) {
 // the browser elsewhere.
 function pathOf(path: string | undefined) {
   return path?.startsWith("/") && !path.startsWith("//") ? path : "/";
+}
+
+// A file of the app's, answered as `type`.
+function asset(file: URL, type: string) {
+  return async (context: Context) =>
+    context.body(await readFile(file), 200, {
+      "Content-Type": type,
+      "Cache-Control": "public, max-age=3600, s-maxage=31536000",
+    });
 }

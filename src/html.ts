@@ -38,6 +38,8 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script type="importmap">
       {
         "imports": {
