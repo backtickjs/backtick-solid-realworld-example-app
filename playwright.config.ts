@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: "./realworld/specs/e2e",
   use: { ...baseConfig.use, baseURL: "http://localhost:3000" },
   webServer: {
-    command: "npm run serve",
+    command: "npm start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
