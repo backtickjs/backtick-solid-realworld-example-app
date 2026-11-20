@@ -10,5 +10,5 @@ export function formatDate(iso: string) {
 // A profile's picture, or the default one when it has none: null, or cleared
 // to "" in the settings.
 export function avatarOf(image: string | null) {
-  return image || "/default-avatar.svg";
+  return image || "/assets/media/default-avatar.svg";
 }

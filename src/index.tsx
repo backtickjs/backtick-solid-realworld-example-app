@@ -35,15 +35,9 @@ app.use(session);
 // The app's own files: its icons.
 app.use("/*", serveStatic({ root: "./public" }));
 
-// The Conduit theme and the default avatar, from the RealWorld submodule.
-app.use(
-  "/styles.css",
-  serveStatic({ path: "./realworld/assets/theme/styles.css" }),
-);
-app.use(
-  "/default-avatar.svg",
-  serveStatic({ path: "./realworld/assets/media/default-avatar.svg" }),
-);
+// RealWorld's theme and images, from the submodule: /assets/theme/styles.css,
+// /assets/media/conduit-logo.svg.
+app.use("/assets/*", serveStatic({ root: "./realworld" }));
 
 // Pages. A route passes the page its request and what the URL names; the
 // page fetches what it shows, and redirects or answers not found itself.

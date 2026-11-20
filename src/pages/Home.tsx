@@ -75,16 +75,29 @@ export async function Home({
         )`
       : undefined;
 
+  // For readers who aren't signed in.
+  const banner = user
+    ? null
+    : cs`(
+        <div class="banner">
+          <div class="container">
+            <h1 class="logo-font">
+              <img
+                src="/assets/media/conduit-logo.svg"
+                alt="Conduit"
+                class="banner-logo"
+              />
+            </h1>
+            <p>A place to share your knowledge.</p>
+          </div>
+        </div>
+      )`;
+
   return (
     <Layout user={user} path="/">
       {cs`(
         <div class="home-page">
-          <div class="banner">
-            <div class="container">
-              <h1 class="logo-font">conduit</h1>
-              <p>A place to share your knowledge.</p>
-            </div>
-          </div>
+          {$banner}
           <div class="container page">
             <div class="row">
               <div class="col-md-9">

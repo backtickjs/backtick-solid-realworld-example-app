@@ -58,7 +58,11 @@ export function Layout({
       <nav class="navbar navbar-light">
         <div class="container">
           <a class="navbar-brand" href="/">
-            conduit
+            <img
+              src="/assets/media/conduit-logo.svg"
+              alt="Conduit"
+              class="navbar-logo"
+            />
           </a>
           <ul class="nav navbar-nav pull-xs-right">
             <$NavItem href="/" active={${path === "/"}}>
@@ -72,7 +76,11 @@ export function Layout({
       <footer>
         <div class="container">
           <a href="/" class="logo-font">
-            conduit
+            <img
+              src="/assets/media/conduit-logo.svg"
+              alt="Conduit"
+              class="footer-logo"
+            />
           </a>
           <span class="attribution">
             An interactive learning project. Code &amp; design licensed under
