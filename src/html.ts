@@ -22,7 +22,6 @@ export async function toHtml(element: JSX.Element): Promise<string> {
   // In development, a map back to the files you wrote, for the browser's
   // devtools.
   const { code } = bundle.generate({
-    format: "es",
     sourcemap: development ? "inline" : false,
   });
 
@@ -52,10 +51,26 @@ export async function toHtml(element: JSX.Element): Promise<string> {
   </head>
   <body>
     <app-root></app-root>
+    <script type="text/plain" id="bundle">${code}</script>
     <script type="module">
-      import { render } from "solid-js/web";
-      import Page from "data:text/javascript,${encodeURIComponent(code)}";
-      render(Page, document.querySelector("app-root"));
+      import * as Solid from "solid-js";
+      import * as SolidWeb from "solid-js/web";
+
+      const moduleMap = {
+        "solid-js": Solid,
+        "solid-js/web": SolidWeb,
+      };
+
+      const bundle = document.getElementById("bundle").textContent;
+      const module = { exports: {} };
+      new Function("module", "exports", "require", bundle)(
+        module,
+        module.exports,
+        (name) => moduleMap[name],
+      );
+
+      const app = document.querySelector("app-root");
+      SolidWeb.render(module.exports, app);
     </script>
   </body>
 </html>`;
