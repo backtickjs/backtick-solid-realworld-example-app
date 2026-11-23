@@ -15,10 +15,10 @@
     "preview": "NODE_ENV=production node dist/dev.js"
   },
   "dependencies": {
-    "@backtickjs/bundler": "0.6.0",
-    "@backtickjs/core": "0.6.0",
-    "@backtickjs/jsx-solid": "0.6.0",
-    "@backtickjs/node-plugin": "0.6.0",
+    "@backtickjs/bundler": "0.8.0",
+    "@backtickjs/core": "0.8.0",
+    "@backtickjs/jsx-solid": "0.8.0",
+    "@backtickjs/node-plugin": "0.8.0",
     "@hono/node-server": "^2.1.4",
     "hono": "^4.13.13",
     "marked": "16.4.1",
@@ -28,9 +28,9 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@backtickjs/prettier-plugin": "0.6.0",
-    "@backtickjs/tsc": "0.6.0",
-    "@backtickjs/tspatch-plugin": "0.6.0",
+    "@backtickjs/prettier-plugin": "0.8.0",
+    "@backtickjs/tsc": "0.8.0",
+    "@backtickjs/tspatch-plugin": "0.8.0",
     "@playwright/test": "1.64.1",
     "@types/node": "^25.9.1",
     "@types/sanitize-html": "2.16.2",

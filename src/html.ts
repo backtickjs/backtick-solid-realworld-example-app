@@ -43,6 +43,7 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <script type="importmap">
       {
         "imports": {
+          "@backtickjs/core": "https://cdn.jsdelivr.net/npm/@backtickjs/core@0.8.0/+esm",
           "solid-js": "https://cdn.jsdelivr.net/npm/solid-js@1.9.17/dist/solid.min.js",
           "solid-js/web": "https://cdn.jsdelivr.net/npm/solid-js@1.9.17/web/dist/web.min.js"
         }
@@ -53,6 +54,7 @@ export async function toHtml(element: JSX.Element): Promise<string> {
     <app-root></app-root>
     <script type="text/plain" id="bundle">${code}</script>
     <script type="module">
+      import { createRuntime } from "@backtickjs/core";
       import * as Solid from "solid-js";
       import * as SolidWeb from "solid-js/web";
 
@@ -61,16 +63,16 @@ export async function toHtml(element: JSX.Element): Promise<string> {
         "solid-js/web": SolidWeb,
       };
 
-      const bundle = document.getElementById("bundle").textContent;
-      const module = { exports: {} };
-      new Function("module", "exports", "require", bundle)(
-        module,
-        module.exports,
-        (name) => moduleMap[name],
+      const runtime = createRuntime({
+        moduleMap,
+        installedPackages: { "solid-js": "1.9.17" },
+      });
+      const page = await runtime.exec(
+        document.getElementById("bundle").textContent,
       );
 
       const app = document.querySelector("app-root");
-      SolidWeb.render(module.exports, app);
+      SolidWeb.render(page, app);
     </script>
   </body>
 </html>`;

@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@backtickjs/bundler':
-        specifier: 0.6.0
-        version: 0.6.0(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(typescript@6.0.3)
       '@backtickjs/core':
-        specifier: 0.6.0
-        version: 0.6.0(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(typescript@6.0.3)
       '@backtickjs/jsx-solid':
-        specifier: 0.6.0
-        version: 0.6.0(solid-js@1.9.17)(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(solid-js@1.9.17)(typescript@6.0.3)
       '@backtickjs/node-plugin':
-        specifier: 0.6.0
-        version: 0.6.0(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(typescript@6.0.3)
       '@hono/node-server':
         specifier: ^2.1.4
         version: 2.1.9(hono@4.13.19)
@@ -43,14 +43,14 @@ importers:
         version: 6.0.3
     devDependencies:
       '@backtickjs/prettier-plugin':
-        specifier: 0.6.0
-        version: 0.6.0(prettier@3.10.1)(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(prettier@3.10.1)(typescript@6.0.3)
       '@backtickjs/tsc':
-        specifier: 0.6.0
-        version: 0.6.0(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(typescript@6.0.3)
       '@backtickjs/tspatch-plugin':
-        specifier: 0.6.0
-        version: 0.6.0(ts-patch@4.0.1)(typescript@6.0.3)
+        specifier: 0.8.0
+        version: 0.8.0(ts-patch@4.0.1)(typescript@6.0.3)
       '@playwright/test':
         specifier: 1.64.1
         version: 1.64.1
@@ -150,55 +150,55 @@ packages:
     resolution: {integrity: sha512-UjI/dKmwJwT9pOszJitq2G6EObZPnsZUfdCr92z2TlF3EZK9J3EdfOKUrCzHl6wFthbzwhzl1Soc/UIwxRiq6w==}
     engines: {node: '>=6.9.0'}
 
-  '@backtickjs/bundler@0.6.0':
-    resolution: {integrity: sha512-PsJgMOo38HrRXne3RbLgv7LCSHrSsWVkeQhV0iY9FIJ7IXxc/4j3iDnbqf9OWind/L+ivJ1tqNe0n7KXT8ztsg==}
+  '@backtickjs/bundler@0.8.0':
+    resolution: {integrity: sha512-410zQJynSF+o5FORGQFEuv2S9L+1BklRNxA7CZLV9XNc1582Pk8iW1+Ynnqx7l8LL2BIVafDoKkrnb4WcCon4A==}
 
-  '@backtickjs/compiler@0.6.0':
-    resolution: {integrity: sha512-l37UktrVf7o5DYeUtEOSE6haDecXZ3JaFdyKsDd0A0jHbFQGoVOsSv/l8dBzkEr7CKfyXHCteLcORcalq2VjNw==}
+  '@backtickjs/compiler@0.8.0':
+    resolution: {integrity: sha512-OQBxnp6d4ZjtZKjocCp8WFEmCWRjBmISy4629lYCTwwbYSacKKg1zj3kVa7KkEIkQZ5epkKri8lzNlBYV/Bqjw==}
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/core@0.6.0':
-    resolution: {integrity: sha512-HtWvRS8xK4nA9iJYi/cTv9+1MK594+LINXuhdHlEqZoqdoRe0KKo2lH1IQsu0TJchF79x5Tq5JCBPvHZQTkb4g==}
+  '@backtickjs/core@0.8.0':
+    resolution: {integrity: sha512-KaN7rhw/+/k9kH8Lri/mAGwy7MgMqbu3YODV0rQdWuAQN3GImK+K4Kx8dEx8rrzH9FAeEjLbQ/AIsMiAyd8OPQ==}
     hasBin: true
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/jsx-solid@0.6.0':
-    resolution: {integrity: sha512-7B8qGDhHIiO4z//xwMeONR6jPvlkmJvY1lEfIXtHFeJ6s/U+ocJ0t7Tk+iIlita+FlZkXmZHC2BW4rGxAIh3/A==}
+  '@backtickjs/jsx-solid@0.8.0':
+    resolution: {integrity: sha512-WalB1USIpj65lgfXRfmZR2bhQxfFxPFcj8z+TbEgfQ4WcOM8+hf4Ee1Q5I4Idw17wEIWzw8T+axO5+J41JX7aA==}
     peerDependencies:
       solid-js: ^1.9.14
 
-  '@backtickjs/language-plugin@0.6.0':
-    resolution: {integrity: sha512-kswLsVuaesepxkhy6LoxHcemlrDlziIkTDe6pICaLlm6t0WWls/PIjK27nkXcpG1/H/YGGej7X1FwDTpHKeGPQ==}
+  '@backtickjs/language-plugin@0.8.0':
+    resolution: {integrity: sha512-7oHjcqWo3y0LlvTAM2vprxAfgvaQRy4uQutvoL8V/HEu3YbcYNRQUsje61RM9Cs25t8Zq8xZg7A1vBVzws1JWQ==}
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/language-service@0.6.0':
-    resolution: {integrity: sha512-3643rx2DrV0cU3rGL5FrfmxCw9eOAa0PRRE6HIFe+jwuHCpG9B4K9ZDBgydJ3pYimqH+y8LUbWaJ2SRxfgACew==}
+  '@backtickjs/language-service@0.8.0':
+    resolution: {integrity: sha512-h9j9aiQqY9CXSK9q7YYTlAy7Fre/JUZt1chdCRsf6/bbpNTIC71JZLcD/OUsXKhpRxMG5BFDMozdTRbhJgxBrA==}
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/node-plugin@0.6.0':
-    resolution: {integrity: sha512-oLypu+1JWFn1f3ryq3QiBOQXzwAY1BM3FI03sJA+WKl5TGDbxtGC5e3DAd/D1WAtTuP8+EtGO+4A6ojIu+KCWg==}
+  '@backtickjs/node-plugin@0.8.0':
+    resolution: {integrity: sha512-enZkzcPBh4OgIH0D5N6PkNc7ZnVyo9q683TkGpQ/80vFR8Zw60cdabNKUMfkDgnk2wCyfzQgKl3RjpyFbM+clQ==}
     engines: {node: '>=22.15'}
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/prettier-plugin@0.6.0':
-    resolution: {integrity: sha512-LjvtqdHqoAwqpM4VC3DLI04mYRtL71qCMAoII1+/na8/2kIQ9sP5gucz5iODqgehIh2HiTySDC5hWIQnoTArlg==}
+  '@backtickjs/prettier-plugin@0.8.0':
+    resolution: {integrity: sha512-xkNjF/kg7ZEif4WLvKJ6BvHCZWvAbRdlAQsk7yzIH1x8atnq4SsNifpBV5wf0ijYLVFKNSPrxMLw+dm7qHTjsA==}
     peerDependencies:
       prettier: ^3.0.0
       typescript: ^6.0.3
 
-  '@backtickjs/tsc@0.6.0':
-    resolution: {integrity: sha512-iBsqHznbmS7kjsGmM1bBClaabwC6QqLvm2QuPp7xkWEG0hdvzFr1I/Y9Pb23q6fPA68H6UCsyHbFLrqFsIY9EA==}
+  '@backtickjs/tsc@0.8.0':
+    resolution: {integrity: sha512-Eb3qfPwPFpZLxOodr0oR07WFwCtJlpI1Vh13Y1SjDPPjU+ksFEYB1no3PGVx+GSXaUjL10WylZy/08ugf+V5Cw==}
     hasBin: true
     peerDependencies:
       typescript: ^6.0.3
 
-  '@backtickjs/tspatch-plugin@0.6.0':
-    resolution: {integrity: sha512-AYsoXdH9rtP5aU0DuJ5ABdZz8lORBmOfFQmkYBwn+JuoL1WYUsKIcu8dyg450uq4KNICyFdw7wuL8z5zUgFtxQ==}
+  '@backtickjs/tspatch-plugin@0.8.0':
+    resolution: {integrity: sha512-JPyULywzC7YezLlMy5yXy8q0fqHrpJINNGuCgvScPkt0RFFigFSaC83lVSv9hMw/ZWrBWW2L59TJm0VL2jDRog==}
     peerDependencies:
       ts-patch: ^4.0.1
       typescript: ^6.0.3
@@ -710,69 +710,69 @@ snapshots:
       '@babel/helper-string-parser': 7.29.14
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@backtickjs/bundler@0.6.0(typescript@6.0.3)':
+  '@backtickjs/bundler@0.8.0(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/core': 0.6.0(typescript@6.0.3)
+      '@backtickjs/core': 0.8.0(typescript@6.0.3)
       semver: 7.8.6
     transitivePeerDependencies:
       - typescript
 
-  '@backtickjs/compiler@0.6.0(typescript@6.0.3)':
+  '@backtickjs/compiler@0.8.0(typescript@6.0.3)':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/trace-mapping': 0.3.31
       typescript: 6.0.3
 
-  '@backtickjs/core@0.6.0(typescript@6.0.3)':
+  '@backtickjs/core@0.8.0(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
 
-  '@backtickjs/jsx-solid@0.6.0(solid-js@1.9.17)(typescript@6.0.3)':
+  '@backtickjs/jsx-solid@0.8.0(solid-js@1.9.17)(typescript@6.0.3)':
     dependencies:
       '@babel/core': 7.29.13
-      '@backtickjs/core': 0.6.0(typescript@6.0.3)
+      '@backtickjs/core': 0.8.0(typescript@6.0.3)
       babel-preset-solid: 1.9.12(@babel/core@7.29.13)(solid-js@1.9.17)
       solid-js: 1.9.17
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@backtickjs/language-plugin@0.6.0(typescript@6.0.3)':
+  '@backtickjs/language-plugin@0.8.0(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
       '@volar/language-core': 2.4.31
       typescript: 6.0.3
 
-  '@backtickjs/language-service@0.6.0(typescript@6.0.3)':
+  '@backtickjs/language-service@0.8.0(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
-      '@backtickjs/language-plugin': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
+      '@backtickjs/language-plugin': 0.8.0(typescript@6.0.3)
       '@volar/language-core': 2.4.31
       typescript: 6.0.3
 
-  '@backtickjs/node-plugin@0.6.0(typescript@6.0.3)':
+  '@backtickjs/node-plugin@0.8.0(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
       typescript: 6.0.3
 
-  '@backtickjs/prettier-plugin@0.6.0(prettier@3.10.1)(typescript@6.0.3)':
+  '@backtickjs/prettier-plugin@0.8.0(prettier@3.10.1)(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
       prettier: 3.10.1
       typescript: 6.0.3
 
-  '@backtickjs/tsc@0.6.0(typescript@6.0.3)':
+  '@backtickjs/tsc@0.8.0(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
-      '@backtickjs/language-plugin': 0.6.0(typescript@6.0.3)
-      '@backtickjs/language-service': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
+      '@backtickjs/language-plugin': 0.8.0(typescript@6.0.3)
+      '@backtickjs/language-service': 0.8.0(typescript@6.0.3)
       '@volar/typescript': 2.4.31(typescript@6.0.3)
       typescript: 6.0.3
 
-  '@backtickjs/tspatch-plugin@0.6.0(ts-patch@4.0.1)(typescript@6.0.3)':
+  '@backtickjs/tspatch-plugin@0.8.0(ts-patch@4.0.1)(typescript@6.0.3)':
     dependencies:
-      '@backtickjs/compiler': 0.6.0(typescript@6.0.3)
+      '@backtickjs/compiler': 0.8.0(typescript@6.0.3)
       ts-patch: 4.0.1
       typescript: 6.0.3
 
